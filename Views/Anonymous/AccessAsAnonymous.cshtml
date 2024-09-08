@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Access as Anonymous";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>You are about to access the application as an anonymous user. Click the button below to continue.</p>
+
+<form asp-controller="Anonymous" asp-action="AccessAsAnonymous" method="post">
+    <button type="submit" class="btn btn-primary">Continue as Anonymous</button>
+</form>

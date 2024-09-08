@@ -1,0 +1,135 @@
+﻿@model ST10157545_GIFTGIVERS.Models.RegisterViewModel
+@{
+    ViewData["Title"]="Register";
+}
+
+<h1>Register</h1>
+<form asp-action="Register" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label asp-for="UserType" class="control-label"></label>
+        <select asp-for="UserType" id="UserType" asp-items="Html.GetEnumSelectList<UserType>()" class="form-control">
+            <option selected="selected" value="">Please select</option>
+        </select>
+        <span asp-validation-for="UserType" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Username" class="control-label"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Phone" class="control-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Gender" class="control-label"></label>
+        <input asp-for="Gender" class="form-control" />
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="control-label"></label>
+        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+    
+    <!-- Admin-specific fields -->
+    <div id="adminFields" style="display:none;">
+        <div class="form-group">
+            <label asp-for="Qualifications" class="control-label"></label>
+            <input asp-for="Qualifications" class="form-control" />
+            <span asp-validation-for="Qualifications" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Speciality" class="control-label"></label>
+            <input asp-for="Speciality" class="form-control" />
+            <span asp-validation-for="Speciality" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <!-- Volunteer-specific fields -->
+    <div id="volunteerFields" style="display:none;">
+        <div class="form-group">
+            <label asp-for="Age" class="control-label"></label>
+            <input asp-for="Age" class="form-control" type="number" />
+            <span asp-validation-for="Age" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsStudent" class="control-label"></label>
+            <input asp-for="IsStudent" class="form-check-input" type="checkbox" />
+            <span asp-validation-for="IsStudent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Area" class="control-label"></label>
+            <input asp-for="Area" class="form-control" />
+            <span asp-validation-for="Area" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <!-- Common field for Admin and Volunteer -->
+    <div id="skillsField" style="display:none;">
+        <div class="form-group">
+            <label asp-for="Skills" class="control-label"></label>
+            <input asp-for="Skills" class="form-control" />
+            <span asp-validation-for="Skills" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <input type="submit" value="Register" class="btn btn-primary" />
+    </div>
+</form>
+<a asp-controller="Auth" asp-action="Login">Login here</a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var userTypeSelect = document.getElementById('UserType');
+        console.log("intial Vaule: ", userTypeSelect);
+
+        // Add an event listener for the change event
+        userTypeSelect.addEventListener('change', function () {
+            var selectedType = userTypeSelect.value;
+            console.log("chosen: ",selectedType);
+            // Hide all conditional fields
+            document.getElementById('adminFields').style.display = 'none';
+            document.getElementById('volunteerFields').style.display = 'none';
+            document.getElementById('skillsField').style.display = 'none';
+            console.log("isVisible?: ", document.getElementById('adminFields').style.display);
+
+            // Show the relevant fields based on the selected user type
+            if (selectedType === "1") {
+                document.getElementById('adminFields').style.display = 'block';
+                console.log("isVisible: ", document.getElementById('adminFields').style.display);
+
+                document.getElementById('skillsField').style.display = 'block';
+            } else if (selectedType === "2") {
+                document.getElementById('volunteerFields').style.display = 'block';
+                console.log("isVisible: ", document.getElementById('volunteerFields').style.display);
+
+                document.getElementById('skillsField').style.display = 'block';
+            }
+        });
+    });
+</script>
+
+

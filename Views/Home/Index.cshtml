@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="slider-container">
+    <div class="slider silde-back">
+        <div class="slide active">
+            <p class="message">Hope is the heartbeat of the soul, keeping us alive in the darkest times.</p>
+            <a href="/spread-hope" class="cta-button">Spread Hope</a>
+        </div>
+        <div class="slide">
+            <p class="message">Your kindness today could change someone's entire life story.</p>
+            <a href="/be-kind" class="cta-button">Be Kind</a>
+        </div>
+        <div class="slide">
+            <p class="message">In giving, we receive the greatest gift of all: the joy of making a difference.</p>
+            <a href="/donate" class="cta-button">Give Now</a>
+        </div>
+    </div>
+    <button class="prev">&lt;</button>
+    <button class="next">&gt;</button>
+</div>
+
+<style>
+    .slider-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+        background: linear-gradient(to right, wheat, #E8B86D);
+        border-radius: 10px;
+    }
+
+    .slider {
+        display: flex;
+        width: 300%;
+        height: 100%;
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+        width: 33.33%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .silde-back{
+        background-image: url("/DefaultImages/bad_situation1.jpeg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover
+    }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+    .message {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .cta-button {
+        padding: 10px 20px;
+        background-color: white;
+        color: #4a00e0;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+        .cta-button:hover {
+            background-color: #f0f0f0;
+        }
+
+    .prev, .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 18px;
+        border-radius: 50%;
+    }
+
+    .prev {
+        left: 10px;
+    }
+
+    .next {
+        right: 10px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const slider = document.querySelector('.slider');
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.querySelector('.prev');
+            const nextButton = document.querySelector('.next');
+            let currentIndex = 0;
+            let interval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                slider.style.transform = `translateX(-${index * 33.33}%)`;
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                showSlide(currentIndex);
+            }
+
+            function startAutoSlide() {
+                interval = setInterval(nextSlide, 5000);
+            }
+
+            function stopAutoSlide() {
+                clearInterval(interval);
+            }
+
+            prevButton.addEventListener('click', () => {
+                prevSlide();
+                stopAutoSlide();
+                startAutoSlide();
+            });
+
+            nextButton.addEventListener('click', () => {
+                nextSlide();
+                stopAutoSlide();
+                startAutoSlide();
+            });
+
+            slider.addEventListener('mouseenter', stopAutoSlide);
+            slider.addEventListener('mouseleave', startAutoSlide);
+
+            showSlide(currentIndex);
+            startAutoSlide();
+        });
+    </script>
+}
