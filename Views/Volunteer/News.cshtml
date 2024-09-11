@@ -1,5 +1,131 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model st10157545_giftgiversPOEs.Models.MediaNewsViewModelCombined;
+
+
+
+
+
+
+
+
 @{
+    ViewData["Title"] = "Latest News";
+
+}
+<h1>Latest News</h1>
+
+@if (Model?.Response?.Results != null && Model.Response.Results.Count > 0)
+{
+    <div class="row">
+        @foreach (var article in Model.Response.Results)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="@article.Fields.Thumbnail" class="card-img-top" alt="@article.WebTitle" />
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Fields.Headline</h5>
+                        <p class="card-text">@article.Fields.BodyText?.Substring(0, 100)...</p>
+                        <a href="@article.WebUrl" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No news available at the moment.</p>
+}
+<h1>Disaster News</h1>
+
+<h2>Twitter News</h2>
+@if (Model.TwitterNews?.Data != null)
+{
+    <ul>
+        @foreach (var tweet in Model.TwitterNews.Data)
+        {
+            <li>@tweet.Text (@tweet.CreatedAt)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No news found on Twitter.</p>
+}
+
+<h2>Instagram Posts</h2>
+@if (Model.InstagramMedia?.Data != null)
+{
+    <ul>
+        @foreach (var post in Model.InstagramMedia.Data)
+        {
+            <li>@post.Caption (<a href="@post.MediaUrl">View Post</a>)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts found on Instagram.</p>
+}
+
+<h2>Facebook Posts</h2>
+@if (Model.FacebookPosts?.Data != null)
+{
+    <ul>
+        @foreach (var post in Model.FacebookPosts.Data)
+        {
+            <li>@post.Message (@post.CreatedTime)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No posts found on Facebook.</p>
+}
+
+<h2>Disaster News</h2>
+
+<!-- Filter form -->
+<form method="get">
+    <label for="countryFilter">Filter by Country:</label>
+    <input type="text" id="countryFilter" name="countryFilter" value="@Model.CountryFilter" />
+    <input type="submit" value="Filter" />
+</form>
+
+<!-- Twitter News -->
+<h3>Twitter</h3>
+<ul>
+    @foreach (var tweet in Model.TwitterNews.Data)
+    {
+        <li>@tweet.Text</li>
+    }
+</ul>
+@if (!string.IsNullOrEmpty(Model.TwitterNextPageToken))
+{
+    <a href="@Url.Action("Index", new { twitterNextToken = Model.TwitterNextPageToken })">Next Page</a>
+}
+
+<!-- Instagram Media -->
+<h3>Instagram</h3>
+<ul>
+    @foreach (var media in Model.InstagramMedia.Data)
+    {
+        <li>@media.Caption</li>
+    }
+</ul>
+@if (!string.IsNullOrEmpty(Model.InstagramNextPageUrl))
+{
+    <a href="@Url.Action("Index", new { instagramNextPage = Model.InstagramNextPageUrl })">Next Page</a>
+}
+
+<!-- Facebook Posts -->
+<h3>Facebook</h3>
+<ul>
+    @foreach (var post in Model.FacebookPosts.Data)
+    {
+        <li>@post.Message</li>
+    }
+</ul>
+@if (!string.IsNullOrEmpty(Model.FacebookNextPageUrl))
+{
+    <a href="@Url.Action("Index", new { facebookNextPage = Model.FacebookNextPageUrl })">Next Page</a>
 }

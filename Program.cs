@@ -7,8 +7,14 @@ using st10157545_giftgiversPOEs.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// Register HttpClient service
+builder.Services.AddHttpClient();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Add in-memory caching
+builder.Services.AddMemoryCache();
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<DatabaseController>(options =>
@@ -35,6 +41,12 @@ builder.Services.AddHostedService<TokenRefreshService>(); // Register TokenRefre
 
 //Service for Subscription:
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<GuardianNewsService>();
+builder.Services.AddScoped<FacebookService>();
+builder.Services.AddScoped<InstagramService>();
+builder.Services.AddScoped<TwitterService>();
+
+
 
 //adding UserRoles policies
 builder.Services.AddAuthorization(options =>
