@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ST10157545_GIFTGIVERS.Models;
+using st10157545_giftgiversPOEs.Models;
 
 namespace ST10157545_GIFTGIVERS.Controllers
 {
@@ -12,6 +13,7 @@ namespace ST10157545_GIFTGIVERS.Controllers
         public DbSet<Admins> Admins { get; set; }
         public DbSet<Volunteers> Volunteers { get;set; }
         public DbSet<ValidateAccess> ValidateAccesses { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

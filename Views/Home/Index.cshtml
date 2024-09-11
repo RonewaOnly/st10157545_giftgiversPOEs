@@ -1,28 +1,33 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-
-<div class="slider-container">
-    <div class="slider silde-back">
-        <div class="slide active">
-            <p class="message">Hope is the heartbeat of the soul, keeping us alive in the darkest times.</p>
-            <a href="/spread-hope" class="cta-button">Spread Hope</a>
-        </div>
-        <div class="slide">
-            <p class="message">Your kindness today could change someone's entire life story.</p>
-            <a href="/be-kind" class="cta-button">Be Kind</a>
-        </div>
-        <div class="slide">
-            <p class="message">In giving, we receive the greatest gift of all: the joy of making a difference.</p>
-            <a href="/donate" class="cta-button">Give Now</a>
-        </div>
-    </div>
-    <button class="prev">&lt;</button>
-    <button class="next">&gt;</button>
-</div>
-
+<!--CSS code-->
 <style>
+    .statistics-section {
+        display: flex ;
+        flex-direction: row;
+        text-align: center;
+        justify-content: space-evenly;
+        align-items:center;
+        padding: 40px;
+        background-color: #f5f5f5;
+    }
+
+        .statistics-section h1 {
+            font-size: 48px;
+            margin: 10px;
+        }
+        .stats{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .stats h1, .stats h2{
+            color: darkgreen;
+        }
+
+
     .slider-container {
         position: relative;
         width: 100%;
@@ -31,6 +36,29 @@
         background: linear-gradient(to right, wheat, #E8B86D);
         border-radius: 10px;
     }
+    .impact-section{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-content:  center;
+    }
+    .impact-section .impact {
+        text-align: center;
+        margin: 20px;
+    }
+
+    .impact-section img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
+
+    .impact-section p {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
 
     .slider {
         display: flex;
@@ -56,8 +84,28 @@
         background-image: url("/DefaultImages/bad_situation1.jpeg");
         background-position: center;
         background-repeat: no-repeat;
-        background-size: cover
+        background-size: cover;
     }
+    .silde-back:nth-child(1){
+            background-image: url("/DefaultImages/bad_situation1.jpeg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+    }
+
+        .silde-back:nth-child(2) {
+            background-image: url("/DefaultImages/bad_situation2.jpeg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .silde-back:nth-child(3) {
+            background-image: url("/DefaultImages/bad_situation3.jpeg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
 
         .slide.active {
             opacity: 1;
@@ -103,8 +151,111 @@
     .next {
         right: 10px;
     }
-</style>
 
+    .primary-goals {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .goal-cards {
+        display: flex;
+        justify-content: space-evenly;
+        margin: 20px;
+    }
+
+    .goal-card {
+        width: 200px;
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+        .goal-card img {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            image-resolution: from-image;
+        }
+
+        .goal-card p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+</style>
+<!--html code-->
+<div class="slider-container">
+    <div class="slider silde-back">
+        <div class="slide active">
+            <p class="message">Hope is the heartbeat of the soul, keeping us alive in the darkest times.</p>
+            <a href="/spread-hope" class="cta-button">Spread Hope</a>
+        </div>
+        <div class="slide">
+            <p class="message">Your kindness today could change someone's entire life story.</p>
+            <a href="/be-kind" class="cta-button">Be Kind</a>
+        </div>
+        <div class="slide">
+            <p class="message">In giving, we receive the greatest gift of all: the joy of making a difference.</p>
+            <a href="/donate" class="cta-button">Give Now</a>
+        </div>
+    </div>
+    <button class="prev">&lt;</button>
+    <button class="next">&gt;</button>
+</div>
+<div class="statistics-section">
+    <h1>
+        Serving
+        Humanity
+    </h1>
+
+    <p>The Gift of the Givers Foundation is the largest disaster response non-governmental organisation of African origin on the African continent. The essence of our presence is to bring hope and restore dignity to the most vulnerable</p>
+
+    <div class="stats">
+        <h1 class="stats-name">R6 Billion in Aid</h1>
+        <h2 class="stats-country">47 Countries</h2>
+        <h2 class="stats-years">32 Years</h2>
+    </div>
+</div>
+<div class="impact-section">
+    <div class="impact">
+        <img src="../DefaultImages/bad_situation3.jpeg" alt="Somalia flooding">
+        <p>Somalia flooding</p>
+    </div>
+    <div class="impact">
+        <img src="../DefaultImages/bad_situation7.jpeg" alt="Gaza airstrikes">
+        <p>Gaza Airstrikes</p>
+    </div>
+
+</div>
+
+<div class="primary-goals">
+    <h2>Our primary goals</h2>
+    <div class="goal-cards">
+        <div class="goal-card">
+            <img src="../DefaultImages/disaster_Reponse.jpeg" alt="Disaster Response">
+            <p>Disaster Response</p>
+        </div>
+        <div class="goal-card">
+            <img src="../DefaultImages/Water_Provision.jpeg" alt="Water Provision">
+            <p>Water Provision</p>
+        </div>
+        <div class="goal-card">
+            <img src="../DefaultImages/Hunger Alleviation.jpeg" alt="Hunger Alleviation">
+            <p>Hunger Alleviation</p>
+        </div>
+        <div class="goal-card">
+            <img src="../DefaultImages/Human Development.jpeg" alt="Human Development">
+            <p>Human Development</p>
+        </div>
+        <div class="goal-card">
+            <img src="../DefaultImages/Education.jpeg" alt="Education">
+            <p>Education</p>
+        </div>
+    </div>
+</div>
+<img src="../DefaultImages/PayGate-Card-Brand-Logos-PayGatePlus.png" style="width: 100vw;" alt="payment options"/>
+<!--Javascrope code-->
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {

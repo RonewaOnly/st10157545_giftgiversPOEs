@@ -20,3 +20,44 @@ html {
 body {
   margin-bottom: 60px;
 }
+footer {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    background-color: #f4f4f4;
+    padding: 20px;
+    text-align: center;
+}
+
+    footer img {
+        margin: 0 10px;
+    }
+
+    footer .contact-info {
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+.newsletter {
+    margin-top: 20px;
+}
+
+    .newsletter input[type="email"] {
+        padding: 10px;
+        width: 250px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .newsletter button {
+        padding: 10px 20px;
+        background-color: green;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .newsletter button:hover {
+            background-color: darkgreen;
+        }

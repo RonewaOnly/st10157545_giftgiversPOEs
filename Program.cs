@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ST10157545_GIFTGIVERS.Controllers;
 using ST10157545_GIFTGIVERS.Models;
+using st10157545_giftgiversPOEs.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,10 @@ builder.Services.AddTransient<SessionService>(); // Register SessionService
 
 // Register the background service
 builder.Services.AddHostedService<TokenRefreshService>(); // Register TokenRefreshService
+
+//Service for Subscription:
+builder.Services.AddScoped<SubscriptionService>();
+
 
 var app = builder.Build();
 

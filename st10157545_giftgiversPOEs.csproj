@@ -14,6 +14,25 @@
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />
     <None Include="Views\_ViewStart.cshtml" />
+    <None Include="wwwroot\DefaultImages\bad_situation1.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation2.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation3.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation4.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation5.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation6.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation7.jpeg" />
+    <None Include="wwwroot\DefaultImages\bad_situation8.jpeg" />
+    <None Include="wwwroot\DefaultImages\cover2.jpeg" />
+    <None Include="wwwroot\DefaultImages\GiftofTheGivers_logo.png" />
+    <None Include="wwwroot\DefaultImages\healthcare.jpg" />
+    <None Include="wwwroot\DefaultImages\news_bbc_logo.jpeg" />
+    <None Include="wwwroot\DefaultImages\PayGate-Card-Brand-Logos-PayGatePlus.png" />
+    <None Include="wwwroot\DefaultImages\pic_cover1.jpg" />
+    <None Include="wwwroot\DefaultImages\pic_cover2.jpg" />
+    <None Include="wwwroot\DefaultImages\pic_cover3.jpg" />
+    <None Include="wwwroot\DefaultImages\R.jpeg" />
+    <None Include="wwwroot\DefaultImages\situation4.jpg" />
+    <None Include="wwwroot\DefaultImages\user_img.jpeg" />
   </ItemGroup>
 
   <ItemGroup>

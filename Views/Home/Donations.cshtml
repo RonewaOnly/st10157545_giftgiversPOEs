@@ -1,5 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
 }
+<style>
+    h2{
+        font-weight: 900;
+        color: lime;
+    }
+
+    .banking-options {
+        display: flex;
+        width: 800px;
+        flex-wrap: wrap;
+        border: 1px solid pink;
+        padding: 15px;
+    }
+    .banking-options > button{
+        border: 1px solid lime;
+        background-color: lightgoldenrodyellow;
+        border-radius: 15px;
+        margin: 10px;
+        padding: 5px;
+    }
+    button{
+        padding: 5px 10px;
+    }
+</style>
+<div>
+    <h2>Donations</h2>
+    <p>Making a difference in the world.</p>
+
+    <div class="banking-options">
+        <button>Banking Details</button>
+        <button>Donate Online</button>
+        <button>Donate with Masterpass</button>
+        <button>Donate with amex</button>
+        <button>Donate with MTN MOMO SA</button>
+        <button>Apply with myschool</button>
+        <button>Donate at standard bank atm (M65)</button>
+        <button>Leave a Legacy</button>
+    </div>
+</div>
