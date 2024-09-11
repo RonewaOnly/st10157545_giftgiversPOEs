@@ -19,35 +19,87 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Donations">Donations</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Report">Report Here</a>
-                        </li>
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Home" asp-action="Privacy" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
+                        @if (User.HasClaim("UserType", UserType.User.ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Donations">Donations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Report">Report Here</a>
+                            </li>
 
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li><a class="dropdown-item active" href="#">Current Appeals</a></li>
-                                <li><a class="dropdown-item" href="#">Current News</a></li>
-                                <li><a class="dropdown-item" href="#">Past Appleats</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Fund raisers </a></li>
-                            </ul>
-                        </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Home" asp-action="Privacy" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
+
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item active" href="#">Current Appeals</a></li>
+                                    <li><a class="dropdown-item" href="#">Current News</a></li>
+                                    <li><a class="dropdown-item" href="#">Past Appleats</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Fund raisers </a></li>
+                                </ul>
+                            </li>
+                        }else if(User.HasClaim("UserType", UserType.Admin.ToString())){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Reports">Report Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Events">Event Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Volunteers">Volunteer Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Donations">Donation Panel</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Responses">
+                                    Disaster Response
+                                </a>
+                            </li>
+                        }
+                        else if (User.HasClaim("UserType", UserType.Volunteer.ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Events">Event</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Tasks">Task</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="News">News</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Profile">Profile</a>
+                            </li>
+                        }
+                        else
+
+                        {
+                            <li>User type is a not found</li>
+
+                        }
+
                            
                     </ul>
                 </div>
 
                 <div>
+                   
+                    
                     @if (User.Identity.IsAuthenticated)
                     {
                         @if (User.HasClaim("IsAnonymous", "true"))
@@ -58,7 +110,9 @@
                         }
                         else
                         {
-                            <span>Welcome, @User.Identity.Name!</span>
+                            <span>
+                                Welcome, @User.Identity.Name!                         
+                            </span>
                             <form asp-controller="Auth" asp-action="Logout" method="post">
                                 <button type="submit">Logout</button>
                             </form>
