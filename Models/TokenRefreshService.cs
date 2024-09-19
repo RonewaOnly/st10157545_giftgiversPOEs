@@ -1,8 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using ST10157545_GIFTGIVERS.Controllers;
+using st10157545_giftgiversPOEs.Controllers;
 
-namespace ST10157545_GIFTGIVERS.Models
+namespace st10157545_giftgiversPOEs.Models
 {
     public class TokenRefreshService : IHostedService, IDisposable
     {

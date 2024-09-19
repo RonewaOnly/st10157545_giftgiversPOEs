@@ -1,8 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Events";
+﻿@model st10157545_giftgiversPOEs.Models.EventsViewModel
+@{
+    ViewData["Title"] = "Events and Programs";
 }
 
 <h1>Events and Programs</h1>
+
+<div class="mb-3">
+    <a href="@Url.Action("CreateEvent", "Admin")" class="btn btn-primary">Create New Event/Program</a>
+</div>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
@@ -12,35 +17,34 @@
         <button class="nav-link" id="programs-tab" data-bs-toggle="tab" data-bs-target="#programs" type="button" role="tab" aria-controls="programs" aria-selected="false">Current Programs</button>
     </li>
 </ul>
-<div class="tab-content" id="myTabContent">
-<div class="tab-pane fade show active" id="events" role="tabpanel" aria-labelledby="events-tab">
-    <div class="list-group mt-3">
-        <p>CurrentEvents</p>
-      @*   @foreach (var event in Model.CurrentEvents)
-        {
-        <a href="#" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@event.Title</h5>
-                <small>@event.Date.ToString("d MMM yyyy")</small>
-            </div>
-            <p class="mb-1">@event.Description</p>
-        </a>
-        } *@
+
+<div class="tab-content mt-3" id="myTabContent">
+    <div class="tab-pane fade show active" id="events" role="tabpanel" aria-labelledby="events-tab">
+        <div class="list-group">
+            @foreach (var evnt in Model.CurrentEvents)
+            {
+                <a href="@Url.Action("EventDetails", "Admin", new { id = evnt.event_id })" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@evnt.event_name</h5>
+                        <small>@evnt.event_date.ToString("d MMM yyyy")</small>
+                    </div>
+                    <p class="mb-1">@evnt.description</p>
+                </a>
+            }
+        </div>
     </div>
-</div>
-<div class="tab-pane fade" id="programs" role="tabpanel" aria-labelledby="programs-tab">
-    <div class="list-group mt-3">
-        <p>Current Programs</p>
-        @* @foreach (var program in Model.CurrentPrograms)
-        {
-        <a href="#" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@program.Title</h5>
-                <small>@program.StartDate.ToString("d MMM yyyy")</small>
-            </div>
-            <p class="mb-1">@program.Description</p>
-        </a>
-        } *@
+    <div class="tab-pane fade" id="programs" role="tabpanel" aria-labelledby="programs-tab">
+        <div class="list-group">
+            @foreach (var prgm in Model.CurrentPrograms)
+            {
+                <a href="@Url.Action("EventDetails", "Admin", new { id = prgm.event_id })" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@prgm.event_name</h5>
+                        <small>@prgm.event_date.ToString("d MMM yyyy")</small>
+                    </div>
+                    <p class="mb-1">@prgm.description</p>
+                </a>
+            }
+        </div>
     </div>
-</div>
 </div>

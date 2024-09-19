@@ -7,7 +7,7 @@ namespace st10157545_giftgiversPOEs.Services
     public class TwitterService
     {
         private readonly HttpClient _httpClient;
-        private const string BearerToken = "AAAAAAAAAAAAAAAAAAAAADRdvwEAAAAA69RsZ0PqJxi1yfwSwq82kyLqPT0%3D6lMsdPwNLqruZvO8e9rPAWSUNc6zUbWtr0CVvr1xY2bwb0FDSe\r\n"; // Add your Twitter Bearer Token here
+        private const string BearerToken = "AAAAAAAAAAAAAAAAAAAAADRdvwEAAAAA1JJekhgO0TjzXy6IN5H1BLqLTuE%3DEEnI5fN28RmpqbUzLhWN90jt6qiDVXj5omhBuifsJuiNn7DKmk"; // Add your Twitter Bearer Token here
 
         private readonly IMemoryCache _cache;
         private const string CacheKey = "TwitterDisasterNews";
@@ -25,7 +25,9 @@ namespace st10157545_giftgiversPOEs.Services
             if (!_cache.TryGetValue(CacheKey, out TwitterSearchResponse cachedResponse))
             {
                 var requestUrl = $"https://api.twitter.com/2/tweets/search/recent?query={query}&tweet.fields=created_at,author_id&expansions=author_id";
-                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken}");
+                _httpClient.DefaultRequestHeaders.Authorization = null; // Clear any existing Authorization header
+
+                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken.Trim()}");
 
                 try
                 {
@@ -61,8 +63,10 @@ namespace st10157545_giftgiversPOEs.Services
             {
                 requestUrl += $"&next_token={nextToken}";
             }
+            _httpClient.DefaultRequestHeaders.Authorization = null; // Clear any existing Authorization header
 
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken}");
+
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken.Trim()}");
 
             try
             {
@@ -100,8 +104,9 @@ namespace st10157545_giftgiversPOEs.Services
             {
                 requestUrl += $"&next_token={nextToken}";
             }
+            _httpClient.DefaultRequestHeaders.Authorization = null; // Clear any existing Authorization header
 
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken}");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {BearerToken.Trim()}");
 
             try
             {

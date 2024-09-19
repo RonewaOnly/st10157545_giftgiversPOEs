@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace ST10157545_GIFTGIVERS.Models
+namespace st10157545_giftgiversPOEs.Models
 {
     public class Volunteers: IUser
     {

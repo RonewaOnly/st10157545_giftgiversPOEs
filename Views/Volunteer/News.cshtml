@@ -1,4 +1,4 @@
-﻿@model st10157545_giftgiversPOEs.Models.MediaNewsViewModelCombined;
+﻿@model st10157545_giftgiversPOEs.Models.CombinedNewsViewModel;
 
 
 
@@ -13,10 +13,10 @@
 }
 <h1>Latest News</h1>
 
-@if (Model?.Response?.Results != null && Model.Response.Results.Count > 0)
+@if (Model?.GuardianNews?.Response?.Results != null && Model.GuardianNews.Response.Results.Count > 0)
 {
     <div class="row">
-        @foreach (var article in Model.Response.Results)
+        @foreach (var article in Model.GuardianNews.Response.Results)
         {
             <div class="col-md-4">
                 <div class="card mb-4">
@@ -33,12 +33,12 @@
 }
 else
 {
-    <p>No news available at the moment.</p>
+    <p>No news available at the moment. Number count: @Model?.GuardianNews?.Response?.Results.Count</p>
 }
 <h1>Disaster News</h1>
 
 <h2>Twitter News</h2>
-@if (Model.TwitterNews?.Data != null)
+@if (Model?.TwitterNews?.Data != null)
 {
     <ul>
         @foreach (var tweet in Model.TwitterNews.Data)
@@ -53,7 +53,7 @@ else
 }
 
 <h2>Instagram Posts</h2>
-@if (Model.InstagramMedia?.Data != null)
+@if (Model?.InstagramMedia?.Data != null)
 {
     <ul>
         @foreach (var post in Model.InstagramMedia.Data)
@@ -68,7 +68,7 @@ else
 }
 
 <h2>Facebook Posts</h2>
-@if (Model.FacebookPosts?.Data != null)
+@if (Model?.FacebookPosts?.Data != null)
 {
     <ul>
         @foreach (var post in Model.FacebookPosts.Data)
@@ -94,9 +94,16 @@ else
 <!-- Twitter News -->
 <h3>Twitter</h3>
 <ul>
-    @foreach (var tweet in Model.TwitterNews.Data)
+    @if (Model.TwitterNews?.Data != null)
     {
-        <li>@tweet.Text</li>
+        foreach (var tweet in Model.TwitterNews.Data)
+        {
+            <p>@tweet.Text</p>
+        }
+    }
+    else
+    {
+        <p>No Twitter news available.</p>
     }
 </ul>
 @if (!string.IsNullOrEmpty(Model.TwitterNextPageToken))
@@ -107,9 +114,17 @@ else
 <!-- Instagram Media -->
 <h3>Instagram</h3>
 <ul>
-    @foreach (var media in Model.InstagramMedia.Data)
+    @if (Model.InstagramMedia?.Data != null)
     {
-        <li>@media.Caption</li>
+        @foreach (var media in Model.InstagramMedia.Data)
+        {
+            <li>@media.Caption</li>
+        }
+
+    }
+    else
+    {
+        <li>No InstagramMedia Caption</li>
     }
 </ul>
 @if (!string.IsNullOrEmpty(Model.InstagramNextPageUrl))
@@ -120,10 +135,19 @@ else
 <!-- Facebook Posts -->
 <h3>Facebook</h3>
 <ul>
-    @foreach (var post in Model.FacebookPosts.Data)
+    @if (Model.FacebookPosts?.Data != null)
     {
-        <li>@post.Message</li>
+        @foreach (var post in Model.FacebookPosts.Data)
+        {
+            <li>@post.Message</li>
+        }
+
     }
+    else
+    {
+        <li>No Facebook post message</li>
+    }
+
 </ul>
 @if (!string.IsNullOrEmpty(Model.FacebookNextPageUrl))
 {

@@ -7,6 +7,9 @@
         public InstagramMediaResponse InstagramMedia { get; set; }
         public FacebookPostResponse FacebookPosts { get; set; }
 
+        public Response Response { get; set; }
+
+
         // For Pagination
         public string TwitterNextPageToken { get; set; }
         public string InstagramNextPageUrl { get; set; }

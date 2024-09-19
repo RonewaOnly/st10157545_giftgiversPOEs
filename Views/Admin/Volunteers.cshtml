@@ -1,8 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Volunteers";
+﻿@model st10157545_giftgiversPOEs.Models.VolunteerViewModel 
+
+@{
+    ViewData["Title"] = "Volunteers Panel";
 }
 
-<h1>Volunteer Table</h1>
+<h1>Volunteer Management</h1>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -18,4 +20,35 @@
             <th>Actions</th>
         </tr>
     </thead>
+    <tbody>
+        @foreach (var volunteer in Model.Volunteers)
+        {
+            <tr>
+                <td>@volunteer.Firstname</td>
+                <td>@volunteer.Lastname</td>
+                <td>@volunteer.Age</td>
+                <td>@volunteer.Area</td>
+                <td>@volunteer.UserType</td>
+@*                 <td>@volunteer.City</td>
+ *@                <td>@volunteer.Email</td>
+                <td>@volunteer.Phone</td>
+@*                 <td>@(volunteer.Status ? "Active" : "Inactive")</td>
+ *@                <td>
+                    <a href="@Url.Action("Volunteer_Details", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-info">View</a>
+                    <a href="@Url.Action("Volunteer_Edit", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Volunteer_Delete", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-danger">Delete</a>
+                    <a href="@Url.Action("Volunteer_Assign", "Admin", new { volunteerId = volunteer.Volunteer_Id })" class="btn btn-primary">Assign to Event</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+
+<div>
+    <h3>Assign Volunteers to Relief Projects</h3>
+    <form asp-action="AssignVolunteersToProjects" method="post">
+        <select asp-for="SelectedVolunteerId" asp-items="Model.VolunteersList"></select>
+        <select asp-for="SelectedProjectId" asp-items="Model.ProjectsList"></select>
+        <button type="submit" class="btn btn-success">Assign</button>
+    </form>
+</div>

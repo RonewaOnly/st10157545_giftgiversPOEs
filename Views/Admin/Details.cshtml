@@ -1,0 +1,41 @@
+﻿@model st10157545_giftgiversPOEs.Models.Report
+
+@{
+    ViewData["Title"] = "Report Details";
+}
+
+<div class="container mt-4">
+    <h2>@Model.disaster_type</h2>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p class="card-text">@Model.description</p>
+
+            <h5 class="card-title">Location</h5>
+            <p class="card-text">@Model.location</p>
+
+            <h5 class="card-title">Report Date</h5>
+            <p class="card-text">@Model.report_date.ToShortDateString()</p>
+
+            <h5 class="card-title">Severity Level</h5>
+            <p class="card-text">@Model.severity_level</p>
+
+            <h5 class="card-title">Status</h5>
+            <p class="card-text">@Model.status</p>
+
+            @if (!string.IsNullOrEmpty(Model.image_url))
+            {
+                <h5 class="card-title">Image</h5>
+                <a href="@Model.image_url" target="_blank">
+                    <img src="@Model.image_url" alt="Disaster Image" class="img-fluid" />
+                </a>
+            }
+
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("Reports", "Admin")" class="btn btn-secondary">Back to Reports</a>
+    </div>
+</div>

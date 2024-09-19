@@ -1,0 +1,22 @@
+﻿@model int // Pass volunteer ID to the view
+
+@{
+    ViewData["Title"] = "Assign Volunteer";
+}
+
+<h1>Assign Volunteer to Event</h1>
+
+<form asp-action="AssignVolunteersToProjects" method="post">
+    <input type="hidden" name="SelectedVolunteerId" value="@Model" />
+    <div class="form-group">
+        <label>Select Event</label>
+        <select name="SelectedProjectId" class="form-control">
+            @foreach (var eventItem in ViewBag.Events)
+            {
+                <option value="@eventItem.Value">@eventItem.Text</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Assign</button>
+    <a href="@Url.Action("Volunteers", "Admin")" class="btn btn-secondary">Cancel</a>
+</form>

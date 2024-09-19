@@ -1,4 +1,4 @@
-﻿namespace ST10157545_GIFTGIVERS.Models
+﻿namespace st10157545_giftgiversPOEs.Models
 {
     public interface IUser
     {//for handled dynamically the common values for all users.

@@ -6,7 +6,7 @@ namespace st10157545_giftgiversPOEs.Services
     public class InstagramService
     {
         private readonly HttpClient _httpClient;
-        private const string AccessToken = "YOUR_INSTAGRAM_ACCESS_TOKEN"; // Add your Instagram access token here
+        private const string AccessToken = "EAAMvPF3ZAcJwBO7qR9rWoyeknPylszrTPQSpUbhCgP5zJtHkxlh6fqxZAGQSIZBLnwbKbZCjb4WrobzelULiHvAirXCgzZAXkUN15WnRxJ69E9NkV6g3nzO4iwgKr0PZAXt6XJQHMkSetwB0KaScGlpmn7zMNo8nKQjiD6oTBwmhNpz6L8iVfR48ZCpc0g80c1tOwZDZD"; // Add your Instagram access token here
         private const int PageSize = 10;
 
         public InstagramService(HttpClient httpClient)

@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
-using ST10157545_GIFTGIVERS.Models;
+using st10157545_giftgiversPOEs.Models;
 using System.Diagnostics;
 
-namespace ST10157545_GIFTGIVERS.Controllers
+namespace st10157545_giftgiversPOEs.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DatabaseController _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, DatabaseController context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -29,7 +31,8 @@ namespace ST10157545_GIFTGIVERS.Controllers
 
         public IActionResult Report()
         {
-            return View();
+            var reportModel = _context.Reports.ToList();
+            return View(reportModel);
         }
 
 

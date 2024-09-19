@@ -1,5 +1,50 @@
-﻿@{
+﻿@using st10157545_giftgiversPOEs.Models
+@model IEnumerable<Report>
+
+@{
     ViewData["Title"] = "Reports";
 }
 
-<h1>Reports</h1>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Report Listings</h2>
+
+    <div class="row">
+        @foreach (var report in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm border-light">
+                    @if (!string.IsNullOrEmpty(report.image_url))
+                    {
+                        <a href="@report.image_url" target="_blank">
+                            <img src="@report.image_url" alt="Disaster Image" class="card-img-top" />
+                        </a>
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">Disaster: @report.disaster_type</h5>
+                        <p class="card-text"> Descrption: @report.description</p>
+                        <p class="card-text"><strong>Location:</strong> @report.location</p>
+                        <p class="card-text"><strong>Date:</strong> @report.report_date.ToShortDateString()</p>
+                        <p class="card-text"><strong>Status:</strong> @report.status</p>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="@Url.Action("Details", "Admin", new { id = report.id })" class="btn btn-primary btn-sm">View Details</a>
+
+                            <div>
+                                <form action="@Url.Action("UpdateStatus", "Admin", new { id = report.id })" method="post" class="d-inline">
+                                    <button type="submit" name="status" value="Accepted" class="btn btn-success btn-sm me-1">Accept</button>
+                                    <button type="submit" name="status" value="Rejected" class="btn btn-danger btn-sm me-1">Reject</button>
+                                    <button type="submit" name="status" value="Pending" class="btn btn-warning btn-sm">Pending</button>
+                                </form>
+
+                                <form action="@Url.Action("Delete", "Admin", new { id = report.id })" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace ST10157545_GIFTGIVERS.Controllers
+namespace st10157545_giftgiversPOEs.Controllers
 {
     public class TokenMiddleware
     {

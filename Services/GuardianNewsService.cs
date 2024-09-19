@@ -14,7 +14,7 @@ namespace st10157545_giftgiversPOEs.Services
             _httpClient = httpClient;
         }
 
-        public async Task<GuardianNewsResponse> GetLatestNewsAsync(string section = "world")
+        public async Task<GuardianNewsResponse?> GetLatestNewsAsync(string section = "world")
         {
             var requestUrl = $"{BaseUrl}{section}?api-key={ApiKey}&show-fields=all";
             var response = await _httpClient.GetAsync(requestUrl);
@@ -24,6 +24,7 @@ namespace st10157545_giftgiversPOEs.Services
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<GuardianNewsResponse>(content);
             }
+            // Log error and handle non-success responses
             return null;
         }
 

@@ -1,0 +1,86 @@
+﻿@model st10157545_giftgiversPOEs.Models.CreateEventViewModel;
+
+@{
+    ViewData["Title"] = "Create Event/Program";
+}
+<h1>Create Event/Program</h1>
+<form asp-action="CreateEvent" asp-controller="Admin" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="Event.event_name" class="form-label">Title</label>
+        <input asp-for="Event.event_name" class="form-control" required />
+        <span asp-validation-for="Event.event_name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.description" class="form-label">Description</label>
+        <textarea asp-for="Event.description" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Event.description" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.location" class="form-label">Location</label>
+        <input asp-for="Event.location" class="form-control" required />
+        <span asp-validation-for="Event.location" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.image_url" class="form-label">Image URL</label>
+        <input asp-for="Event.image_url" class="form-control" />
+        <span asp-validation-for="Event.image_url" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.event_type" class="form-label">Event Type</label>
+        <select asp-for="Event.event_type" class="form-select" required>
+            <option value="Events">Event</option>
+            <option value="Program">Program</option>
+        </select>
+        <span asp-validation-for="Event.event_type" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.startDate" class="form-label">Start Date</label>
+        <input type="date" asp-for="Event.startDate" class="form-control" required />
+        <span asp-validation-for="Event.startDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.endDate" class="form-label">End Date</label>
+        <input type="date" asp-for="Event.endDate" class="form-control" required />
+        <span asp-validation-for="Event.endDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.event_date" class="form-label">Event Date</label>
+        <input type="date" asp-for="Event.event_date" class="form-control" required />
+        <span asp-validation-for="Event.event_date" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Event.admin_id" class="form-label">Assign Admin</label>
+        @if (Model.AdminList.Any())
+        {
+            <select asp-for="Event.admin_id" class="form-select" asp-items="Model.AdminList">
+                <option value="">Select an admin</option>
+            </select>
+        }
+        else
+        {
+            <select class="form-select" disabled>
+                <option>No admins available</option>
+            </select>
+        }
+        <span asp-validation-for="Event.admin_id" class="text-danger"></span>
+        @if (!string.IsNullOrEmpty(Model.AdminError))
+        {
+            <div class="text-danger">@Model.AdminError</div>
+        }
+    </div>
+    @if (Model.AdminList.Count != 0)
+    {
+        <div class="text-danger">@Model.AdminList[0].Value</div>
+    }
+    <div class="mb-3">
+        <input type="submit" id="createEvents" class="btn btn-primary" value="Create Event/Program" />
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} 

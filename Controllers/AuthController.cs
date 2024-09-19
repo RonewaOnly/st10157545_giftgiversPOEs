@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using ST10157545_GIFTGIVERS.Models;
+using st10157545_giftgiversPOEs.Models;
 using System.Security.Claims;
 using System.Text;
 using System;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 
-namespace ST10157545_GIFTGIVERS.Controllers
+namespace st10157545_giftgiversPOEs.Controllers
 {
     public class AuthController : Controller
     {

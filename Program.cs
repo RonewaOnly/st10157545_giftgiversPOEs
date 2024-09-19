@@ -1,15 +1,47 @@
+using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ST10157545_GIFTGIVERS.Controllers;
-using ST10157545_GIFTGIVERS.Models;
+using st10157545_giftgiversPOEs.Controllers;
+using st10157545_giftgiversPOEs.Models;
 using st10157545_giftgiversPOEs.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//OAuth Login and it will allow me to use api's 
 
+//to call an API from your ASP.NET MVC application, you need to obtain an access token issued for the API you want to call.
+//As the SDK is configured to use OAuth's Implicit Grant with Form Post, no access token will be returned by default. In order to do so,
+//we should be using the Authorization Code Grant, which requires the use of a ClientSecret. Next, to obtain the token to access an external API,
+//call WithAccessToken and set the audience to the API Identifier.
+//You can get the API Identifier from the API Settings for the API you want to use.to call an API from your ASP.NET MVC application,
+//you need to obtain an access token issued for the API you want to call. As the SDK is configured to use OAuth's Implicit Grant with Form Post,
+//no access token will be returned by default. In order to do so, we should be using the Authorization Code Grant, which requires the use of a ClientSecret.
+//Next, to obtain the token to access an external API, call WithAccessToken and set the audience to the API Identifier. You can get the API Identifier from the API Settings for the API you want to use.
+//builder.Services.AddAuth0WebAppAuthentication(options =>
+//{
+//    options.Domain = builder.Configuration["dev-jyotnd875b0ivq20.us.auth0.com"];
+//    options.ClientId = builder.Configuration["Auth0:FH0AOVi8I9yeVPUkz3dd9QB9kQhu42RO"];
+//})
+//  .WithAccessToken(options =>
+//  {
+//      options.Audience = builder.Configuration["Auth0:Audience"];//will replace with the access token of the api i want to
+//  })  
+//    ;
 // Register HttpClient service
 builder.Services.AddHttpClient();
+// Register the session service
+builder.Services.AddTransient<SessionService>(); // Register SessionService
+
+// Register the background service
+builder.Services.AddHostedService<TokenRefreshService>(); // Register TokenRefreshService
+
+//Service for Subscription:
+builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<GuardianNewsService>();
+builder.Services.AddScoped<FacebookService>();
+builder.Services.AddScoped<InstagramService>();
+builder.Services.AddScoped<TwitterService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,18 +65,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
-// Register the session service
-builder.Services.AddTransient<SessionService>(); // Register SessionService
-
-// Register the background service
-builder.Services.AddHostedService<TokenRefreshService>(); // Register TokenRefreshService
-
-//Service for Subscription:
-builder.Services.AddScoped<SubscriptionService>();
-builder.Services.AddScoped<GuardianNewsService>();
-builder.Services.AddScoped<FacebookService>();
-builder.Services.AddScoped<InstagramService>();
-builder.Services.AddScoped<TwitterService>();
 
 
 

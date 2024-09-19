@@ -6,7 +6,7 @@ namespace st10157545_giftgiversPOEs.Services
     public class FacebookService
     {
         private readonly HttpClient _httpClient;
-        private const string AccessToken = "YOUR_FACEBOOK_ACCESS_TOKEN"; // Add your Facebook access token here
+        private const string AccessToken = "896361249206428|mecGtxX2RANQr6d1GwdG0PyJRLQ"; // Add your Facebook access token here
         private const int PageSize = 10;
 
         public FacebookService(HttpClient httpClient)

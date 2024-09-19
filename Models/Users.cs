@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace ST10157545_GIFTGIVERS.Models
+namespace st10157545_giftgiversPOEs.Models
 {
     public class Users:IUser
     {

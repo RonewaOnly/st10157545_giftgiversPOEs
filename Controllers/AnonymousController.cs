@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace ST10157545_GIFTGIVERS.Controllers
+namespace st10157545_giftgiversPOEs.Controllers
 {
     public class AnonymousController : Controller
     {

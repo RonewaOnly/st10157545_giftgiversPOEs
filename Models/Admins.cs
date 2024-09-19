@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using st10157545_giftgiversPOEs.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace ST10157545_GIFTGIVERS.Models
+namespace st10157545_giftgiversPOEs.Models
 {
     public class Admins : IUser
     {
@@ -46,5 +47,8 @@ namespace ST10157545_GIFTGIVERS.Models
 
         public UserType UserType { get; } = UserType.Admin;
 
+        public virtual ICollection<Events> Events { get; set; }
+
+        
     }
 }
