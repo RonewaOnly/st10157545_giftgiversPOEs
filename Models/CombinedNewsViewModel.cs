@@ -2,8 +2,8 @@
 {
     public class CombinedNewsViewModel
     {
-       // Guardian News
-    public GuardianNewsResponse? GuardianNews { get; set; }
+        // Guardian News
+        public GuardianNewsResponse? GuardianNews { get; set; }
 
         // Social Media News
         public TwitterSearchResponse? TwitterNews { get; set; }

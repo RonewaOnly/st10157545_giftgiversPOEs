@@ -16,51 +16,51 @@ namespace st10157545_giftgiversPOEs.Models
 
         [Required]
         [StringLength(20)]
-        [Display(Name = "Username")]
+        [Display(Name = "username")]
         public string? Username { get; set; }
 
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "email")]
         public string? Email { get; set; }
 
         [Required]
         [Phone]
         [StringLength(13)]
-        [Display(Name = "Phone Number")]
+        [Display(Name = "phone Number")]
         public string? Phone { get; set; }
 
         [StringLength(20)]
-        [Display(Name = "Gender")]
+        [Display(Name = "gender")]
         public string Gender { get; set; } = "I prefer not to say";
 
         [Required]
         [StringLength(255, MinimumLength = 6)]
         [DataType(DataType.Password)]
-        public string? Password { get; set; }
+        public string? password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("password", ErrorMessage = "The password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
 
         // Additional fields for Admin and Volunteer
-        [Display(Name = "Qualifications")]
+        [Display(Name = "qualifications")]
         public string? Qualifications { get; set; }
 
-        [Display(Name = "Skills")]
+        [Display(Name = "skills")]
         public string? Skills { get; set; }
 
-        [Display(Name = "Speciality")]
+        [Display(Name = "speciality")]
         public string? Speciality { get; set; }
 
-        [Display(Name = "Age")]
+        [Display(Name = "age")]
         public int? Age { get; set; }
 
-        [Display(Name = "Is Student")]
+        [Display(Name = "Is student")]
         public bool IsStudent { get; set; }
 
-        [Display(Name = "Area")]
+        [Display(Name = "area")]
         public string? Area { get; set; }
 
         [Display(Name = "User Type")]

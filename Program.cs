@@ -1,7 +1,5 @@
-using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using st10157545_giftgiversPOEs.Controllers;
 using st10157545_giftgiversPOEs.Models;
 using st10157545_giftgiversPOEs.Services;
@@ -20,37 +18,42 @@ var builder = WebApplication.CreateBuilder(args);
 //Next, to obtain the token to access an external API, call WithAccessToken and set the audience to the API Identifier. You can get the API Identifier from the API Settings for the API you want to use.
 //builder.Services.AddAuth0WebAppAuthentication(options =>
 //{
-//    options.Domain = builder.Configuration["dev-jyotnd875b0ivq20.us.auth0.com"];
-//    options.ClientId = builder.Configuration["Auth0:FH0AOVi8I9yeVPUkz3dd9QB9kQhu42RO"];
+//    options.Domain = builder.Configuration["Auth0:Domain"];
+//    options.ClientId = builder.Configuration["Auth0:ClientId"];
 //})
-//  .WithAccessToken(options =>
-//  {
-//      options.Audience = builder.Configuration["Auth0:Audience"];//will replace with the access token of the api i want to
-//  })  
-//    ;
+//.WithAccessToken(options =>
+//{
+//    options.Audience = builder.Configuration["Auth0:Audience"];//will replace with the access token of the api i want to
+//});
+
 // Register HttpClient service
 builder.Services.AddHttpClient();
+
 // Register the session service
-builder.Services.AddTransient<SessionService>(); // Register SessionService
+builder.Services.AddTransient<SessionService>();
 
 // Register the background service
-builder.Services.AddHostedService<TokenRefreshService>(); // Register TokenRefreshService
+builder.Services.AddHostedService<TokenRefreshService>();
 
-//Service for Subscription:
+// Service for Subscription:
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<GuardianNewsService>();
 builder.Services.AddScoped<FacebookService>();
 builder.Services.AddScoped<InstagramService>();
 builder.Services.AddScoped<TwitterService>();
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 // Add in-memory caching
 builder.Services.AddMemoryCache();
 
 // Configure DbContext with SQL Server
 builder.Services.AddDbContext<DatabaseController>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection"))
+      .EnableSensitiveDataLogging()
+            .LogTo(Console.WriteLine, LogLevel.Information));
 
 // Add authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -65,16 +68,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
     });
 
-
-
-
-//adding UserRoles policies
+// Adding UserRoles policies
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
     options.AddPolicy("VolunteerPolicy", policy => policy.RequireRole("Volunteer"));
-
 });
 
 var app = builder.Build();
@@ -91,11 +90,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Make sure authentication is used
+app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.UseMiddleware<TokenMiddleware>(); //for automatice token refreshment 
+app.UseMiddleware<TokenMiddleware>(); // For automatic token refreshment 
 
 // Custom middleware to redirect based on user roles
 app.Use(async (context, next) =>
@@ -104,7 +102,6 @@ app.Use(async (context, next) =>
     {
         if (context.User.IsInRole(UserType.Admin.ToString()))
         {
-            // Redirect Admin to the admin dashboard if they are in the admin role
             if (!context.Request.Path.StartsWithSegments("/Admin"))
             {
                 context.Response.Redirect("/Admin/Index");
@@ -113,7 +110,6 @@ app.Use(async (context, next) =>
         }
         else if (context.User.IsInRole(UserType.User.ToString()))
         {
-            // Normal users are redirected to the default user home if not already there
             if (!context.Request.Path.StartsWithSegments("/Home"))
             {
                 context.Response.Redirect("/Home/Index");
@@ -122,7 +118,6 @@ app.Use(async (context, next) =>
         }
         else if (context.User.IsInRole(UserType.Volunteer.ToString()))
         {
-            // Normal users are redirected to the default user home if not already there
             if (!context.Request.Path.StartsWithSegments("/Volunteer"))
             {
                 context.Response.Redirect("/Volunteer/Index");
@@ -131,7 +126,6 @@ app.Use(async (context, next) =>
         }
     }
 
-    // Call the next middleware in the pipeline
     await next.Invoke();
 });
 

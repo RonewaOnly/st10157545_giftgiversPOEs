@@ -1,0 +1,80 @@
+﻿@model st10157545_giftgiversPOEs.Models.Events
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Event Card -->
+            <div class="card shadow-sm">
+                <!-- Event Image -->
+                @if (!string.IsNullOrEmpty(Model.image_url))
+                {
+                    <img src="@Model.image_url" class="card-img-top img-fluid" alt="@Model.event_name" style="max-height: 400px; object-fit: cover;" />
+                }
+                else
+                {
+                    <img src="~/images/placeholder-image.png" class="card-img-top img-fluid" alt="Event Image Placeholder" style="max-height: 400px; object-fit: cover;" />
+                }
+
+                <!-- Card Body -->
+                <div class="card-body">
+                    <h2 class="card-title">@Model.event_name</h2>
+                    <p class="card-text text-muted"><strong>Type:</strong> @Model.event_type</p>
+                    <p class="card-text"><strong>Location:</strong> @Model.location</p>
+
+                    <!-- Event Description -->
+                    @if (Model.description != null && !string.IsNullOrWhiteSpace(Model.description))
+                    {
+                        <p class="card-text"><strong>Description:</strong> @Model.description</p>
+                    }
+                    else
+                    {
+                        <p>No description available</p>
+                    }
+
+                        
+                        
+
+                    <!-- Event Dates -->
+                    <p class="card-text">
+                        <strong>Start Date:</strong> @Model.startDate.ToString("MMMM dd, yyyy")<br />
+                        <strong>End Date:</strong> @Model.endDate.ToString("MMMM dd, yyyy")<br />
+                        <strong>Event Date:</strong> @Model.event_date.ToString("MMMM dd, yyyy")
+                    </p>
+
+                    <!-- Admin Information -->
+                    <p class="card-text"><strong>Admin:</strong> @Model.Admin.firstname @Model.Admin.lastname</p>
+
+                    <!-- Donations Section -->
+                    @if (Model.Donations != null && Model.Donations.Any())
+                    {
+                        <h5 class="mt-4">Donations:</h5>
+                        <ul class="list-group">
+                            @foreach (var donation in Model.Donations)
+                            {
+                                <li class="list-group-item">
+                                    <strong>Item:</strong> @donation.item_name<br />
+                                    <strong>Quantity:</strong> @donation.item_quantity<br />
+                                    <strong>Date:</strong> @donation.donation_date.ToString("MMMM dd, yyyy")
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No donations recorded for this event.</p>
+                    }
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-footer text-center">
+                    <a href="javascript:history.back()" class="btn btn-secondary">Back</a>
+                    <a href="@Url.Action("EditEvent", "Admin", new { id = Model.event_id })" class="btn btn-primary">Edit Event</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

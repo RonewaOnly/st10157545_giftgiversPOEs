@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
 {
-    public class Users:IUser
+    public class Users : IUser
     {
 
         [Key]
@@ -21,24 +20,24 @@ namespace st10157545_giftgiversPOEs.Models
 
         [Required]
         [MaxLength(12)]
-        public string Username { get; set; }
+        public string username { get; set; }
 
         [Required]
         [MaxLength(255)]
         [EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required]
         [MaxLength(12)]
         [Phone]
-        public string Phone { get; set; }
+        public string phone { get; set; }
 
         [MaxLength(20)]
         public string Gender { get; set; }
 
         [Required]
         [MaxLength(150)]
-        public string Password { get; set; }
+        public string password { get; set; }
         public UserType UserType { get; } = UserType.User;
 
     }

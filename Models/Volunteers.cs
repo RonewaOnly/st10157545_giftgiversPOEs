@@ -1,53 +1,61 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
 {
-    public class Volunteers: IUser
+    public class Volunteers : IUser
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Volunteer_Id { get; set; }
+        public int volunteer_id { get; set; }
 
         [Required]
         [StringLength(129)]
-        public string Firstname { get; set; }
+        public string firstname { get; set; }
 
         [Required]
         [StringLength(150)]
-        public string Lastname { get; set; }
+        public string lastname { get; set; }
 
         [Required]
         [StringLength(12)]
-        public string Username { get; set; }
+        public string username { get; set; }
 
         [Required]
         [StringLength(13)]
         [Phone]
-        public string Phone { get; set; }
+        public string phone { get; set; }
 
         [Required]
         [StringLength(255)]
         [EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [StringLength(int.MaxValue)]
-        public string Skills { get; set; } = "none";
+        public string skills { get; set; } = "none";
 
         [Required]
-        public int ?Age { get; set; }
+        public int? age { get; set; }
 
         [StringLength(20)]
-        public string Gender { get; set; } = "I prefer not to say";
+        public string gender { get; set; } = "I prefer not to say";
 
-        public int Student { get; set; } = 0;
+        public int student { get; set; } = 0;
 
-        public string Area { get; set; }
+        public string area { get; set; }
 
         [Required]
         [StringLength(150)]
-        public string Password { get; set; }
+        public string password { get; set; }
         public UserType UserType { get; } = UserType.Volunteer;
+
+        // Status property
+        public bool Status { get; set; } = false; // Default to Inactive
+
+        public virtual ICollection<ReliefProject> ReliefProjects { get; set; }
+
+
+
 
     }
 }

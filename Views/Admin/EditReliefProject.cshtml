@@ -1,0 +1,35 @@
+﻿@model st10157545_giftgiversPOEs.Models.ReliefProject
+
+<h2>Edit Relief Project</h2>
+
+<form asp-action="EditReliefProject">
+    <input type="hidden" asp-for="relief_id" />
+    <div class="form-group">
+        <label asp-for="projectName"></label>
+        <input asp-for="projectName" class="form-control" />
+        <span asp-validation-for="projectName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="projectDescription"></label>
+        <textarea asp-for="projectDescription" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="affectedArea"></label>
+        <input asp-for="affectedArea" class="form-control" />
+        <span asp-validation-for="affectedArea" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="startDate"></label>
+        <input asp-for="startDate" type="date" class="form-control" />
+        <span asp-validation-for="startDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="endDate"></label>
+        <input asp-for="endDate" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="admin_id"></label>
+        <select asp-for="admin_id" class="form-control" asp-items="@(new SelectList(ViewBag.Admins, "admin_id", "username"))"></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

@@ -1,0 +1,75 @@
+﻿@model st10157545_giftgiversPOEs.Models.ReliefProject
+
+<h2>Create Relief Project</h2>
+
+<form asp-action="CreateReliefProject">
+    <div class="form-group">
+        <label asp-for="projectName"></label>
+        <input asp-for="projectName" class="form-control" />
+        <span asp-validation-for="projectName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="projectDescription"></label>
+        <textarea asp-for="projectDescription" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="affectedArea"></label>
+        <input asp-for="affectedArea" class="form-control" />
+        <span asp-validation-for="affectedArea" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="teamAssigned"></label>
+        <input asp-for="teamAssigned" class="form-control" />
+        <span asp-validation-for="teamAssigned" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="teamLeader"></label>
+        <input asp-for="teamLeader" class="form-control" />
+        <span asp-validation-for="teamLeader" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="totalCost"></label>
+        <input asp-for="totalCost" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="totalCost" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="resourcesUsed"></label>
+        <select asp-for="resource_id" class="form-control" asp-items="@(new SelectList(ViewBag.Resources, "resource_id", "resource_name"))">
+            <option value="">Select Resource</option>
+        </select>
+        <span asp-validation-for="resource_id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="startDate"></label>
+        <input asp-for="startDate" type="date" class="form-control" />
+        <span asp-validation-for="startDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="endDate"></label>
+        <input asp-for="endDate" type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="additialTeams"></label>
+        <input asp-for="additialTeams" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="admin_id"></label>
+        <select asp-for="admin_id" class="form-control" asp-items="@(new SelectList(ViewBag.Admins, "admin_id", "username"))">
+            <option value="">Select Admin</option>
+        </select>
+        <span asp-validation-for="admin_id" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="volunteer_id"></label>
+        <select asp-for="volunteer_id" class="form-control" asp-items="@(new SelectList(ViewBag.Volunteers, "volunteer_id", "firstname"))">
+            <option value="">Select Volunteer</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="teamMembers_injured"></label>
+        <input asp-for="teamMembers_injured" class="form-control" type="number" />
+        <span asp-validation-for="teamMembers_injured" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+

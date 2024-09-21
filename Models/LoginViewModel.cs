@@ -5,7 +5,7 @@ namespace st10157545_giftgiversPOEs.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Username or Email")]
+        [Display(Name = "username or email")]
         public string UsernameOrEmail { get; set; }
 
         [Required]

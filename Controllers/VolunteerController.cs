@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using st10157545_giftgiversPOEs.Controllers;
 using st10157545_giftgiversPOEs.Models;
 using st10157545_giftgiversPOEs.Services;
 
@@ -32,7 +30,7 @@ namespace st10157545_giftgiversPOEs.Controllers
         {
             return View();
         }
-        
+
         public async Task<IActionResult> News(string? countryFilter = null, string? twitterNextToken = null, string? instagramNextPage = null, string? facebookNextPage = null)
         {
             var viewModel = new CombinedNewsViewModel();

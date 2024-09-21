@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace st10157545_giftgiversPOEs.Models
 {
@@ -6,7 +7,7 @@ namespace st10157545_giftgiversPOEs.Models
     {
         [Required]
         [StringLength(100)]
-        public string DonationId { get; set; }
+        public string DonationId { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
         [StringLength(90)]
@@ -35,5 +36,8 @@ namespace st10157545_giftgiversPOEs.Models
         public string AdminId { get; set; }
 
         public int? VolunteerId { get; set; }
+
+        public List<SelectListItem> AdminList { get; set; } // List of available admins for dropdown
+
     }
 }

@@ -1,26 +1,31 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using st10157545_giftgiversPOEs.Models;
 
 namespace st10157545_giftgiversPOEs.Controllers
 {
     public class DatabaseController : DbContext
     {
-        public DatabaseController(DbContextOptions<DatabaseController> options):base(options) { }
+        public DatabaseController(DbContextOptions<DatabaseController> options) : base(options) { }
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Admins> Admins { get; set; }
-        public DbSet<Volunteers> Volunteers { get;set; }
+        public DbSet<Volunteers> Volunteers { get; set; }
         public DbSet<ValidateAccess> ValidateAccesses { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
 
         public DbSet<Report> Reports { get; set; }  // Add Report DbSet
-        public DbSet<Resource> Resources { get; set; }
+        public DbSet<Resources> Resources { get; set; }
         public DbSet<ReliefProject> ReliefProjects { get; set; }
         public DbSet<Donation> Donations { get; set; }
 
         public DbSet<Events> Events { get; set; }
 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            base.OnConfiguring(optionsBuilder);
+        }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,66 +66,61 @@ namespace st10157545_giftgiversPOEs.Controllers
 
             // USERS entity configuration
             modelBuilder.Entity<Users>()
-                .HasIndex(u => u.Username)
+                .HasIndex(u => u.username)
                 .IsUnique();
 
             modelBuilder.Entity<Users>()
-                .HasIndex(u => u.Email)
+                .HasIndex(u => u.email)
                 .IsUnique();
 
             modelBuilder.Entity<Users>()
-                .HasIndex(u => u.Phone)
+                .HasIndex(u => u.phone)
                 .IsUnique();
 
             // ADMINS entity configuration
-            modelBuilder.Entity<Admins>()
-                .HasIndex(a => a.Username)
-                .IsUnique();
+            modelBuilder.Entity<Admins>(entity =>
+            {
+                entity.HasKey(a => a.admin_id);
+                entity.Property(a => a.admin_id)
+                    .HasColumnName("admin_id"); // Map FK column
 
-            modelBuilder.Entity<Admins>()
-                .HasIndex(a => a.Email)
+                entity.HasIndex(a => a.username)
                 .IsUnique();
+                entity.HasIndex(a => a.email)
+                .IsUnique();
+                entity.HasIndex(a => a.phone)
+                .IsUnique();
+            });
 
-            modelBuilder.Entity<Admins>()
-                .HasIndex(a => a.Phone)
-                .IsUnique();
 
             // VOLUNTEERS entity configuration
-            modelBuilder.Entity<Volunteers>()
-                .HasIndex(v => v.Username)
+            modelBuilder.Entity<Volunteers>(entity =>
+            {
+                entity.HasKey(v => v.volunteer_id);
+                entity.Property(v => v.volunteer_id)
+                    .HasColumnName("volunteer_id"); // Map FK column
+                entity.HasIndex(v => v.username)
                 .IsUnique();
-
-            modelBuilder.Entity<Volunteers>()
-                .HasIndex(v => v.Email)
+                entity.HasIndex(v => v.email)
                 .IsUnique();
-
-            modelBuilder.Entity<Volunteers>()
-                .HasIndex(v => v.Phone)
+                entity.HasIndex(v => v.phone)
                 .IsUnique();
-
-            modelBuilder.Entity<Volunteers>()
-                .Property(v => v.Skills)
+                entity.Property(v => v.skills)
                 .HasDefaultValue("none");
-
-            modelBuilder.Entity<Volunteers>()
-                .Property(v => v.Gender)
+                entity.Property(v => v.gender)
                 .HasDefaultValue("I prefer not to say");
-
-            modelBuilder.Entity<Volunteers>()
-                .Property(v => v.Student)
+                entity.Property(v => v.student)
                 .HasDefaultValue(0);
+            });
+
 
             // REPORT entity configuration
             modelBuilder.Entity<Report>(entity =>
             {
                 entity.ToTable("REPORT");
-
-                // Corrected SQL for computed column
                 entity.Property(e => e.report_id)
                     .HasComputedColumnSql("CONCAT('report-', RIGHT('000' + CAST(Id AS VARCHAR(3)), 3))")
                     .IsRequired();
-
-                // Set up foreign key relationship with nullable delete behavior
                 entity.HasOne(r => r.User)
                     .WithMany()
                     .HasForeignKey(r => r.user_id)
@@ -128,84 +128,126 @@ namespace st10157545_giftgiversPOEs.Controllers
             });
 
             // RESOURCES entity configuration
-            modelBuilder.Entity<Resource>()
-                .ToTable("RESOURCES")
-                .HasKey(r => r.ResourceId);
+            modelBuilder.Entity<Resources>(entity =>
+            {
+                entity.ToTable("RESOURCES");
 
-            modelBuilder.Entity<Resource>()
-                .Property(r => r.ResourceId)
-                .HasColumnName("resource_id");
+                entity.HasKey(r => r.resource_id);
 
-            modelBuilder.Entity<Resource>()
-                .Property(r => r.AdminId)
-                .HasColumnName("admin_id");
+                entity.Property(r => r.resource_name)
+                    .HasColumnName("resource_name")
+                    .HasMaxLength(120)
+                    .IsRequired();
+
+                entity.Property(r => r.resource_quantity)
+                    .HasColumnName("resource_quantity")
+                    .IsRequired();
+
+                entity.Property(r => r.available)
+                    .HasColumnName("available")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                entity.Property(r => r.managingPerson)
+                    .HasColumnName("managingPerson")
+                    .HasColumnType("NVARCHAR(MAX)")
+                    .IsRequired();
+
+                entity.Property(r => r.categories)
+                    .HasColumnName("categories")
+                    .HasMaxLength(90)
+                    .HasDefaultValue("unknown");
+
+                entity.Property(r => r.projectUsed)
+                    .HasColumnName("projectUsed")
+                    .HasColumnType("NVARCHAR(MAX)")
+                    .IsRequired();
+
+                entity.Property(r => r.admin_id)
+                    .HasColumnName("admin_id")
+                    .HasMaxLength(100)
+                    .IsRequired();
+
+                // Explicitly configure the relationship
+                entity.HasOne(r => r.Admin)
+                    .WithMany(a => a.Resources)  // Admin can have multiple resources
+                    .HasForeignKey(r => r.admin_id)  // admin_id is the FK
+                    .OnDelete(DeleteBehavior.Cascade); // Handle delete behavior
+            });
 
             // RELIEF_PROJECT entity configuration
-            modelBuilder.Entity<ReliefProject>()
-                .ToTable("RELIEF_PROJECT")
-                .HasKey(rp => rp.relief_id);
 
-            modelBuilder.Entity<ReliefProject>()
-                .Property(rp => rp.relief_id)
-                .HasColumnName("relief_id");
+            modelBuilder.Entity<ReliefProject>(entity =>
+            {
+                entity.ToTable("RELIEF_PROJECT");
+                entity.HasKey(e => e.relief_id);
 
-            modelBuilder.Entity<ReliefProject>()
-                .HasOne(rp => rp.Resource)
-                .WithMany()
-                .HasForeignKey(rp => rp.resource_id)
-                .OnDelete(DeleteBehavior.SetNull);
+                entity.Property(e => e.relief_id).HasColumnName("relief_id");
+                entity.Property(e => e.admin_id).HasColumnName("admin_id");
+                entity.Property(e => e.volunteer_id).HasColumnName("volunteer_id");
+                entity.Property(e => e.resource_id).HasColumnName("resource_id");
 
-            modelBuilder.Entity<ReliefProject>()
-                .HasOne(rp => rp.Admin)
-                .WithMany()
-                .HasForeignKey(rp => rp.admin_id)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(rp => rp.Admin)
+        .WithMany(a => a.ReliefProjects)
+        .HasForeignKey(rp => rp.admin_id)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
-            modelBuilder.Entity<ReliefProject>()
-                .HasOne(rp => rp.Volunteer)
-                .WithMany()
-                .HasForeignKey(rp => rp.volunteer_id)
-                .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(d => d.Volunteer)
+                    .WithMany(p => p.ReliefProjects)
+                    .HasForeignKey(d => d.volunteer_id)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Resource)
+                    //.WithMany(p => p.ReliefProjects)
+                    .WithMany()
+                    .HasForeignKey(d => d.resource_id)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
 
             // DONATIONS entity configuration
-            modelBuilder.Entity<Donation>()
-                .ToTable("DONATIONS")
-                .HasKey(d => d.DonationId);
+            modelBuilder.Entity<Donation>(entity =>
+            {
+                entity.ToTable("DONATIONS").HasKey(d => d.donation_id);
+                entity.HasOne(d => d.User)
+        .WithMany()
+        .HasForeignKey(d => d.user_id)
+        .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Donation>()
-                .HasOne(d => d.User)
-                .WithMany()
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.Admin)
+                      .WithMany()
+                      .HasForeignKey(d => d.admin_id)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Donation>()
-                .HasOne(d => d.Admin)
-                .WithMany()
-                .HasForeignKey(d => d.AdminId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.Volunteer)
+                      .WithMany()
+                      .HasForeignKey(d => d.volunteer_id)
+                      .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Donation>()
-                .HasOne(d => d.Volunteer)
-                .WithMany()
-                .HasForeignKey(d => d.VolunteerId)
-                .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(d => d.Event)
+                      .WithMany(e => e.Donations)
+                      .HasForeignKey(d => d.event_id)
+                      .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Donation>()
-                .HasOne(d => d.Event)
-                .WithMany()
-                .HasForeignKey(d => d.EventId)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(d => d.ReliefProject).WithMany().HasForeignKey(rp => rp.relief_id);
+                entity.Property(d => d.cash_amount)
+    .HasColumnType("decimal(18,2)");
+            });
 
             // EVENTS entity configuration
-            modelBuilder.Entity<Events>()
-                .ToTable("EVENTS")
-                .HasKey(e => e.event_id);
+            modelBuilder.Entity<Events>(entity =>
+            {
+                entity.ToTable("EVENTS");
 
-            modelBuilder.Entity<Events>()
-                .HasOne(e => e.Admin)
-                .WithMany(a => a.Events)
-                .HasForeignKey(e => e.admin_id)
-                .OnDelete(DeleteBehavior.Cascade);
+                entity.HasKey(e => e.event_id);
+
+                entity.HasOne(e => e.Admin)
+                    .WithMany(a => a.Events)
+                    .HasForeignKey(e => e.admin_id)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+
         }
 
 

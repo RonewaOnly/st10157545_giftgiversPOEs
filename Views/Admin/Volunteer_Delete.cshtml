@@ -10,10 +10,10 @@
 </div>
 
 <div>
-    <p><strong>Name:</strong> @Model.Firstname @Model.Lastname</p>
-    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Name:</strong> @Model.firstname @Model.lastname</p>
+    <p><strong>Email:</strong> @Model.email</p>
     <form asp-action="Volunteer_Delete" method="post">
-        <input type="hidden" asp-for="Volunteer_Id" />
+        <input type="hidden" asp-for="volunteer_id" />
         <button type="submit" class="btn btn-danger">Delete</button>
         <a href="@Url.Action("Volunteers", "Admin")" class="btn btn-secondary">Cancel</a>
     </form>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using st10157545_giftgiversPOEs.Models;
 
 namespace st10157545_giftgiversPOEs.Models
 {

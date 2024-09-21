@@ -1,5 +1,5 @@
-﻿using st10157545_giftgiversPOEs.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
 {
@@ -7,48 +7,49 @@ namespace st10157545_giftgiversPOEs.Models
     {
         [Key]
         [StringLength(100)]
-        public string Admin_Id { get; set; }
+        public string admin_id { get; set; }
 
         [Required]
         [StringLength(120)]
-        public string? Firstname { get; set; }
+        public string? firstname { get; set; }
 
         [Required]
         [StringLength(150)]
-        public string? Lastname { get; set; }
+        public string? lastname { get; set; }
 
         [Required]
         [StringLength(20)]
-        public  string? Username { get; set; }
+        public string? username { get; set; }
 
 
         [Required]
         [StringLength(13)]
         [Phone]
-        public string? Phone { get; set; }
+        public string? phone { get; set; }
 
         [StringLength(20)]
-        public string? Gender { get; set; } = "I prefer not to say";
+        public string? gender { get; set; } = "I prefer not to say";
 
         [Required]
-        public string? Qualifications { get; set; }
+        public string? qualifications { get; set; }
 
-        public string? Skills { get; set; }
+        public string? skills { get; set; }
 
-        public string? Speciality { get; set; }
+        public string? speciality { get; set; }
 
         [EmailAddress]
         [StringLength(255)]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required]
         [StringLength(255)]
-        public string Password { get; set; }
+        public string password { get; set; }
 
         public UserType UserType { get; } = UserType.Admin;
 
         public virtual ICollection<Events> Events { get; set; }
+        public ICollection<ReliefProject> ReliefProjects { get; set; }
+        public virtual ICollection<Resources> Resources { get; set; }
 
-        
     }
 }

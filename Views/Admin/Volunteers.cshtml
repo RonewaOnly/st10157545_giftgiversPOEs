@@ -24,20 +24,20 @@
         @foreach (var volunteer in Model.Volunteers)
         {
             <tr>
-                <td>@volunteer.Firstname</td>
-                <td>@volunteer.Lastname</td>
-                <td>@volunteer.Age</td>
-                <td>@volunteer.Area</td>
+                <td>@volunteer.firstname</td>
+                <td>@volunteer.lastname</td>
+                <td>@volunteer.age</td>
+                <td>@volunteer.area</td>
                 <td>@volunteer.UserType</td>
 @*                 <td>@volunteer.City</td>
- *@                <td>@volunteer.Email</td>
-                <td>@volunteer.Phone</td>
+ *@                <td>@volunteer.email</td>
+                <td>@volunteer.phone</td>
 @*                 <td>@(volunteer.Status ? "Active" : "Inactive")</td>
  *@                <td>
-                    <a href="@Url.Action("Volunteer_Details", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-info">View</a>
-                    <a href="@Url.Action("Volunteer_Edit", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Volunteer_Delete", "Admin", new { id = volunteer.Volunteer_Id })" class="btn btn-danger">Delete</a>
-                    <a href="@Url.Action("Volunteer_Assign", "Admin", new { volunteerId = volunteer.Volunteer_Id })" class="btn btn-primary">Assign to Event</a>
+                    <a href="@Url.Action("Volunteer_Details", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-info">View</a>
+                    <a href="@Url.Action("Volunteer_Edit", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Volunteer_Delete", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-danger">Delete</a>
+                    <a href="@Url.Action("Volunteer_Assign", "Admin", new { volunteerId = volunteer.volunteer_id })" class="btn btn-primary">Assign to Event</a>
                 </td>
             </tr>
         }

@@ -1,0 +1,59 @@
+﻿@model st10157545_giftgiversPOEs.Models.DonationViewModel
+
+@{
+    ViewData["Title"] = "Add Donation";
+}
+
+<h2>Add Donation</h2>
+
+<form asp-action="Donation_Add" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="ItemName" class="form-label">Item Name</label>
+        <input asp-for="ItemName" class="form-control" />
+        <span asp-validation-for="ItemName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ItemCategory" class="form-label">Item Category</label>
+        <input asp-for="ItemCategory" class="form-control" />
+        <span asp-validation-for="ItemCategory" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ItemQuantity" class="form-label">Item Quantity</label>
+        <input asp-for="ItemQuantity" class="form-control" />
+        <span asp-validation-for="ItemQuantity" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DonationDate" class="form-label">Donation Date</label>
+        <input asp-for="DonationDate" class="form-control" type="date" />
+        <span asp-validation-for="DonationDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CashAmount" class="form-label">Cash Amount</label>
+        <input asp-for="CashAmount" class="form-control" />
+        <span asp-validation-for="CashAmount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FullNameDonator" class="form-label">Full Name of Donator</label>
+        <input asp-for="FullNameDonator" class="form-control" />
+        <span asp-validation-for="FullNameDonator" class="text-danger"></span>
+    </div>
+
+    <!-- Admin Dropdown -->
+    <div class="mb-3">
+        <label asp-for="AdminId" class="form-label">Assign Admin</label>
+        <select asp-for="AdminId" class="form-select" asp-items="Model.AdminList">
+            <option value="">Select an admin</option>
+        </select>
+        <span asp-validation-for="AdminId" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Add Donation" />
+</form>
+

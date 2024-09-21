@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using st10157545_giftgiversPOEs.Models;
 using System.Security.Claims;
-using System.Text;
-using System;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace st10157545_giftgiversPOEs.Controllers
 {
     public class AuthController : Controller
     {
 
-        private readonly DatabaseController  _context;
+        private readonly DatabaseController _context;
         private readonly SessionService _sessionService;
 
         public AuthController(DatabaseController context, SessionService sessionService)
@@ -34,14 +33,14 @@ namespace st10157545_giftgiversPOEs.Controllers
             if (ModelState.IsValid)
             {
                 var user = await FindUserByUsernameOrEmail(model.UsernameOrEmail);
-                if (user != null && VerifyPassword(model.Password, user.Password))
+                if (user != null && VerifyPassword(model.Password, user.password))
                 {
-                    var accessToken = await _sessionService.GenerateAccessTokenAsync(user.Username);
+                    var accessToken = await _sessionService.GenerateAccessTokenAsync(user.username);
 
                     var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.NameIdentifier, user.Phone),
+                new Claim(ClaimTypes.Name, user.username),
+                new Claim(ClaimTypes.NameIdentifier, user.phone),
                 new Claim("AccessToken", accessToken),
                 new Claim("UserType", user.UserType.ToString())
             };
@@ -89,18 +88,18 @@ namespace st10157545_giftgiversPOEs.Controllers
             {
                 if (await IsUsernameTaken(model.Username))
                 {
-                    ModelState.AddModelError("Username", "Username is already taken.");
+                    ModelState.AddModelError("username", "username is already taken.");
                     return View(model);
                 }
 
                 if (await IsEmailTaken(model.Email))
                 {
-                    ModelState.AddModelError("Email", "Email is already in use.");
+                    ModelState.AddModelError("email", "email is already in use.");
                     return View(model);
                 }
                 if (await IsPhoneTaken(model.Phone))
                 {
-                    ModelState.AddModelError("Phone", "Phone is already in use.");
+                    ModelState.AddModelError("phone", "phone is already in use.");
                     return View(model);
                 }
 
@@ -133,41 +132,41 @@ namespace st10157545_giftgiversPOEs.Controllers
         private async Task<IUser> FindUserByUsernameOrEmail(string usernameOrEmail)
         {
             var user = await _context.Users
-                .Where(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail)
+                .Where(u => u.username == usernameOrEmail || u.email == usernameOrEmail)
                 .Select(u => new Users
                 {
-                    Username = u.Username,
-                    Email = u.Email,
-                    Phone = u.Phone,
-                    Password = u.Password
+                    username = u.username,
+                    email = u.email,
+                    phone = u.phone,
+                    password = u.password
                 })
                 .FirstOrDefaultAsync();
 
             if (user != null) return user;
 
             var admin = await _context.Admins
-                .Where(a => a.Username == usernameOrEmail || a.Email == usernameOrEmail)
+                .Where(a => a.username == usernameOrEmail || a.email == usernameOrEmail)
                 .Select(a => new Admins
                 {
-                    Admin_Id = a.Admin_Id,
-                    Username = a.Username,
-                    Email = a.Email,
-                    Phone = a.Phone,
-                    Password = a.Password,
+                    admin_id = a.admin_id,
+                    username = a.username,
+                    email = a.email,
+                    phone = a.phone,
+                    password = a.password,
                 })
                 .FirstOrDefaultAsync();
 
             if (admin != null) return admin;
 
             var volunteer = await _context.Volunteers
-                .Where(v => v.Username == usernameOrEmail || v.Email == usernameOrEmail)
+                .Where(v => v.username == usernameOrEmail || v.email == usernameOrEmail)
                 .Select(v => new Volunteers
                 {
-                    Volunteer_Id = v.Volunteer_Id,
-                    Username = v.Username,
-                    Email = v.Email,
-                    Phone = v.Phone,
-                    Password = v.Password
+                    volunteer_id = v.volunteer_id,
+                    username = v.username,
+                    email = v.email,
+                    phone = v.phone,
+                    password = v.password
                 })
                 .FirstOrDefaultAsync();
 
@@ -178,23 +177,23 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         private async Task<bool> IsUsernameTaken(string username)
         {
-            return await _context.Users.AnyAsync(u => u.Username == username) ||
-                   await _context.Admins.AnyAsync(a => a.Username == username) ||
-                   await _context.Volunteers.AnyAsync(v => v.Username == username);
+            return await _context.Users.AnyAsync(u => u.username == username) ||
+                   await _context.Admins.AnyAsync(a => a.username == username) ||
+                   await _context.Volunteers.AnyAsync(v => v.username == username);
         }
 
         private async Task<bool> IsEmailTaken(string email)
         {
-            return await _context.Users.AnyAsync(u => u.Email == email) ||
-                   await _context.Admins.AnyAsync(a => a.Email == email) ||
-                   await _context.Volunteers.AnyAsync(v => v.Email == email);
+            return await _context.Users.AnyAsync(u => u.email == email) ||
+                   await _context.Admins.AnyAsync(a => a.email == email) ||
+                   await _context.Volunteers.AnyAsync(v => v.email == email);
         }
 
         private async Task<bool> IsPhoneTaken(string phone)
         {
-            return await _context.Users.AnyAsync(u => u.Phone == phone) ||
-                   await _context.Admins.AnyAsync(a => a.Phone == phone) ||
-                   await _context.Volunteers.AnyAsync(v => v.Phone == phone);
+            return await _context.Users.AnyAsync(u => u.phone == phone) ||
+                   await _context.Admins.AnyAsync(a => a.phone == phone) ||
+                   await _context.Volunteers.AnyAsync(v => v.phone == phone);
         }
 
         private IUser CreateUserFromModel(RegisterViewModel model)
@@ -206,41 +205,41 @@ namespace st10157545_giftgiversPOEs.Controllers
                     {
                         Firstname = model.FirstName,
                         Lastname = model.LastName,
-                        Username = model.Username,
-                        Email = model.Email,
-                        Phone = model.Phone,
+                        username = model.Username,
+                        email = model.Email,
+                        phone = model.Phone,
                         Gender = model.Gender,
-                        Password = HashPassword(model.Password)
+                        password = HashPassword(model.password)
                     };
                 case UserType.Admin:
                     return new Admins
                     {
-                        Admin_Id = Guid.NewGuid().ToString(),
-                        Firstname = model.FirstName,
-                        Lastname = model.LastName,
-                        Username = model.Username,
-                        Email = model.Email,
-                        Phone = model.Phone,
-                        Gender = model.Gender,
-                        Password = HashPassword(model.Password),
-                        Qualifications = model.Qualifications,
-                        Skills = model.Skills,
-                        Speciality = model.Speciality
+                        admin_id = Guid.NewGuid().ToString(),
+                        firstname = model.FirstName,
+                        lastname = model.LastName,
+                        username = model.Username,
+                        email = model.Email,
+                        phone = model.Phone,
+                        gender = model.Gender,
+                        password = HashPassword(model.password),
+                        qualifications = model.Qualifications,
+                        skills = model.Skills,
+                        speciality = model.Speciality
                     };
                 case UserType.Volunteer:
                     return new Volunteers
                     {
-                        Firstname = model.FirstName,
-                        Lastname = model.LastName,
-                        Username = model.Username,
-                        Email = model.Email,
-                        Phone = model.Phone,
-                        Gender = model.Gender,
-                        Password = HashPassword(model.Password),
-                        Skills = model.Skills,
-                        Age = model.Age.Value,
-                        Student = model.IsStudent ? 1 : 0,
-                        Area = model.Area
+                        firstname = model.FirstName,
+                        lastname = model.LastName,
+                        username = model.Username,
+                        email = model.Email,
+                        phone = model.Phone,
+                        gender = model.Gender,
+                        password = HashPassword(model.password),
+                        skills = model.Skills,
+                        age = model.Age.Value,
+                        student = model.IsStudent ? 1 : 0,
+                        area = model.Area
 
                     };
                 default:
@@ -251,12 +250,12 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         private async Task LoginUser(IUser user)
         {
-            var accessToken = await _sessionService.GenerateAccessTokenAsync(user.Username);
+            var accessToken = await _sessionService.GenerateAccessTokenAsync(user.username);
 
             var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.Name, user.Username),
-        new Claim(ClaimTypes.NameIdentifier, user.Username),
+        new Claim(ClaimTypes.Name, user.username),
+        new Claim(ClaimTypes.NameIdentifier, user.username),
         new Claim("UserType", user.UserType.ToString()),
          new Claim("AccessToken", accessToken),
 

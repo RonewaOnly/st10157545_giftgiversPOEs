@@ -1,4 +1,4 @@
-﻿@model st10157545_giftgiversPOEs.Models.Volunteers // Adjust namespace accordingly
+﻿@model st10157545_giftgiversPOEs.Models.Volunteers 
 
 @{
     ViewData["Title"] = "Volunteer Details";
@@ -8,12 +8,12 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">@Model.Firstname @Model.Lastname</h5>
-        <p class="card-text"><strong>Age:</strong> @Model.Age</p>
-        <p class="card-text"><strong>Address:</strong> @Model.Area</p>
-        <p class="card-text"><strong>Email:</strong> @Model.Email</p>
-        <p class="card-text"><strong>Cell Number:</strong> @Model.Phone</p>
-@*         <p class="card-text"><strong>Status:</strong> @(Model.Status ? "Active" : "Inactive")</p>
- *@        <a href="@Url.Action("Volunteers", "Admin")" class="btn btn-secondary">Back to List</a>
+        <h5 class="card-title">@Model.firstname @Model.lastname</h5>
+        <p class="card-text"><strong>Age:</strong> @Model.age</p>
+        <p class="card-text"><strong>Address:</strong> @Model.area</p>
+        <p class="card-text"><strong>Email:</strong> @Model.email</p>
+        <p class="card-text"><strong>Cell Number:</strong> @Model.phone</p>
+         <p class="card-text"><strong>Status:</strong> @(Model.Status ? "Active" : "Inactive")</p>
+         <a href="@Url.Action("Volunteers", "Admin")" class="btn btn-secondary">Back to List</a>
     </div>
 </div>

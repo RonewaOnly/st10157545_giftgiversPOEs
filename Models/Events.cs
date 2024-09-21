@@ -1,7 +1,6 @@
-﻿using st10157545_giftgiversPOEs.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
 {
@@ -49,6 +48,6 @@ namespace st10157545_giftgiversPOEs.Models
 
         // This is a collection, not validated during form submission
         [BindNever]
-        public virtual ICollection<Donation> Donations { get; set; } = new List<Donation>();
+        public virtual ICollection<Donation> Donations { get; set; }
     }
 }

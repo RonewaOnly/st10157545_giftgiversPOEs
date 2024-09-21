@@ -1,35 +1,46 @@
-﻿using st10157545_giftgiversPOEs.Models;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
 {
+    [Table("DONATIONS")]
     public class Donation
     {
-        public string DonationId { get; set; }
-        public string ItemName { get; set; }
-        public string ItemCategory { get; set; }
-        public int ItemQuantity { get; set; }
-        public DateTime DonationDate { get; set; }
-        public decimal? CashAmount { get; set; }
-        public string FullnameDonator { get; set; }
-        public int? UserId { get; set; }
-        public string AdminId { get; set; }
-        public int? VolunteerId { get; set; }
-        // New foreign key for the event
-        public int? EventId { get; set; }
+        [Key]
+        public string donation_id { get; set; } = Guid.NewGuid().ToString(); 
+        public string item_name { get; set; }
+        public string item_category { get; set; }
+        public int item_quantity { get; set; }
+        public DateTime donation_date { get; set; }
+        public decimal? cash_amount { get; set; }
+        public string fullnameDonator { get; set; }
+
+        [ForeignKey(nameof(Users))]
+        public int? user_id { get; set; }
+
+        [ForeignKey(nameof(Admins))]
+        public string admin_id { get; set; }
+
+        [ForeignKey(nameof(Volunteers))]
+        public int? volunteer_id { get; set; }
+
+        [ForeignKey(nameof(Events))]
+        [Column("event_id")]
+        public int? event_id { get; set; }
+
+        [ForeignKey(nameof(ReliefProject))]
+
+        public int? relief_id { get; set; }
 
         // Navigation properties
-        [ForeignKey("UserId")]
+        [BindNever]
         public virtual Users User { get; set; }
-
-        [ForeignKey("AdminId")]
         public virtual Admins Admin { get; set; }
-
-        [ForeignKey("VolunteerId")]
         public virtual Volunteers Volunteer { get; set; }
-
-        [ForeignKey("EventId")]
         public virtual Events Event { get; set; }
+
+        public virtual ReliefProject ReliefProject { get; set; }
 
     }
 }

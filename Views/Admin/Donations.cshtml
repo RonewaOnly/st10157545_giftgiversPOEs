@@ -1,5 +1,39 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<st10157545_giftgiversPOEs.Models.Donation>
+
 @{
+    ViewData["Title"] = "Donations Management";
 }
+
+<h1>Donations Management</h1>
+<a asp-action="Donation_Add" class="btn btn-primary">Add Donation</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Item Category</th>
+            <th>Item Quantity</th>
+            <th>Donation Date</th>
+            <th>Donator</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var donation in Model)
+        {
+            <tr>
+                <td>@donation.item_name</td>
+                <td>@donation.item_category</td>
+                <td>@donation.item_quantity</td>
+                <td>@donation.donation_date.ToShortDateString()</td>
+                <td>@donation.fullnameDonator</td>
+                <td>
+                    <a asp-action="Donation_Edit" asp-route-id="@donation.donation_id" class="btn btn-warning">Edit</a>
+                    <form asp-action="Donation_Delete" asp-route-id="@donation.donation_id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this donation?');">Delete</button>
+                    </form>                   
+                    <a asp-action="Donation_Assign" asp-route-id="@donation.donation_id" class="btn btn-success">Assign</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

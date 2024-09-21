@@ -1,0 +1,87 @@
+﻿@model st10157545_giftgiversPOEs.Models.CreateEventViewModel
+
+@{
+    ViewData["Title"] = "Edit Event/Program";
+}
+
+<div class="container mt-5">
+    <h1>Edit Event/Program</h1>
+
+    <form asp-action="EditEvent" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- Event Name -->
+        <div class="mb-3">
+            <label asp-for="Event.event_name" class="form-label">Event Name</label>
+            <input asp-for="Event.event_name" class="form-control" />
+            <span asp-validation-for="Event.event_name" class="text-danger"></span>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label asp-for="Event.description" class="form-label">Description</label>
+            <textarea asp-for="Event.description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Event.description" class="text-danger"></span>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <label asp-for="Event.location" class="form-label">Location</label>
+            <input asp-for="Event.location" class="form-control" />
+            <span asp-validation-for="Event.location" class="text-danger"></span>
+        </div>
+
+        <!-- Image URL -->
+        <div class="mb-3">
+            <label asp-for="Event.image_url" class="form-label">Image URL</label>
+            <input asp-for="Event.image_url" class="form-control" />
+            <span asp-validation-for="Event.image_url" class="text-danger"></span>
+        </div>
+
+        <!-- Event Type -->
+        <div class="mb-3">
+            <label asp-for="Event.event_type" class="form-label">Event Type</label>
+            <select asp-for="Event.event_type" class="form-select">
+                <option value="Events">Event</option>
+                <option value="Program">Program</option>
+            </select>
+            <span asp-validation-for="Event.event_type" class="text-danger"></span>
+        </div>
+
+        <!-- Start Date -->
+        <div class="mb-3">
+            <label asp-for="Event.startDate" class="form-label">Start Date</label>
+            <input type="date" asp-for="Event.startDate" class="form-control" />
+            <span asp-validation-for="Event.startDate" class="text-danger"></span>
+        </div>
+
+        <!-- End Date -->
+        <div class="mb-3">
+            <label asp-for="Event.endDate" class="form-label">End Date</label>
+            <input type="date" asp-for="Event.endDate" class="form-control" />
+            <span asp-validation-for="Event.endDate" class="text-danger"></span>
+        </div>
+
+        <!-- Event Date -->
+        <div class="mb-3">
+            <label asp-for="Event.event_date" class="form-label">Event Date</label>
+            <input type="date" asp-for="Event.event_date" class="form-control" />
+            <span asp-validation-for="Event.event_date" class="text-danger"></span>
+        </div>
+
+        <!-- Admin Selection -->
+        <div class="mb-3">
+            <label asp-for="Event.admin_id" class="form-label">Assign Admin</label>
+            <select asp-for="Event.admin_id" class="form-select" asp-items="Model.AdminList">
+                <option value="">Select an admin</option>
+            </select>
+            <span asp-validation-for="Event.admin_id" class="text-danger"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="mb-3">
+            <input type="submit" class="btn btn-primary" value="Save Changes" />
+            <a href="@Url.Action("EventDetails", "Admin", new { id = Model.Event.event_id })" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
