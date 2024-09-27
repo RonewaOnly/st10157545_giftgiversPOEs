@@ -1,42 +1,225 @@
-﻿
-@{
+﻿@{
 }
 <style>
-    h2{
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h2 {
         font-weight: 900;
-        color: lime;
+        color: #4CAF50; /* Changed to a more soothing green */
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
     }
 
     .banking-options {
         display: flex;
-        width: 800px;
+        justify-content: center;
         flex-wrap: wrap;
-        border: 1px solid pink;
+        border: 1px solid #e0e0e0; /* Softer border color */
+        background-color: #ffffff; /* White background for clarity */
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 900px; /* Set a maximum width */
+        margin: 0 auto; /* Centering the container */
+    }
+
+        .banking-options > button {
+            border: none; /* Removed border for a cleaner look */
+            background-color: #4CAF50; /* A stronger green for buttons */
+            color: white; /* White text color */
+            border-radius: 25px; /* More rounded buttons */
+            margin: 10px;
+            padding: 10px 20px; /* Increased padding for better touch targets */
+            cursor: pointer; /* Pointer cursor for buttons */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Animation effects */
+        }
+
+            .banking-options > button:hover {
+                background-color: #45a049; /* Darker green on hover */
+                transform: scale(1.05); /* Slight scale effect */
+            }
+
+            .banking-options > button:active {
+                transform: scale(0.95); /* Scale down effect on click */
+            }
+
+    .section {
+        margin-top: 20px;
         padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
     }
-    .banking-options > button{
-        border: 1px solid lime;
-        background-color: lightgoldenrodyellow;
-        border-radius: 15px;
-        margin: 10px;
-        padding: 5px;
+
+    form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
     }
-    button{
-        padding: 5px 10px;
+
+    form input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
     }
+
+    button {
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
 </style>
+
 <div>
     <h2>Donations</h2>
     <p>Making a difference in the world.</p>
 
     <div class="banking-options">
-        <button>Banking Details</button>
-        <button>Donate Online</button>
-        <button>Donate with Masterpass</button>
-        <button>Donate with amex</button>
-        <button>Donate with MTN MOMO SA</button>
-        <button>Apply with myschool</button>
-        <button>Donate at standard bank atm (M65)</button>
-        <button>Leave a Legacy</button>
+        <button onclick="showSection('bankingDetails')">Banking Details</button>
+        <button onclick="showSection('donateOnline')">Donate Online</button>
+        <button onclick="showSection('masterpass')">Donate with Masterpass</button>
+        <button onclick="showSection('amex')">Donate with Amex</button>
+        <button onclick="showSection('mtnMomo')">Donate with MTN MOMO SA</button>
+        <button onclick="showSection('mySchool')">Apply with MySchool</button>
+        <button onclick="showSection('atm')">Donate at Standard Bank ATM (M65)</button>
+        <button onclick="showSection('legacy')">Leave a Legacy</button>
     </div>
+
+    <!-- Sections for each option -->
+    <div id="bankingDetails" class="section" style="display:none;">
+        <h3>Banking Details</h3>
+        <form>
+            <label for="accountName">Account Name:</label>
+            <input type="text" id="accountName" name="accountName" placeholder="Enter account name" required>
+
+            <label for="accountNumber">Account Number:</label>
+            <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account number" required>
+
+            <label for="bankName">Bank Name:</label>
+            <input type="text" id="bankName" name="bankName" placeholder="Enter bank name" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+
+    <div id="donateOnline" class="section" style="display:none;">
+        <h3>Donate Online</h3>
+        <form>
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter card number" required>
+
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+
+            <label for="cvc">CVC:</label>
+            <input type="text" id="cvc" name="cvc" placeholder="CVC" required>
+
+            <button type="submit">Donate Now</button>
+        </form>
+    </div>
+
+
+    <div id="masterpass" class="section" style="display:none;">
+        <h3>Donate with Masterpass</h3>
+        <p>Scan the QR code below to donate with Masterpass:</p>
+        <img src="~/DefaultImages/qrcode-placeholder.png" width="200" height="200" alt="Masterpass QR Code">
+    </div>
+
+    <div id="amex" class="section" style="display:none;">
+        <h3>Donate with Amex</h3>
+        <form>
+            <label for="amexCardNumber">Amex Card Number:</label>
+            <input type="text" id="amexCardNumber" name="amexCardNumber" placeholder="Enter Amex card number" required>
+
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required>
+
+            <label for="cvc">CVC:</label>
+            <input type="text" id="cvc" name="cvc" placeholder="CVC" required>
+
+            <button type="submit">Donate with Amex</button>
+        </form>
+    </div>
+
+
+    <div id="mtnMomo" class="section" style="display:none;">
+        <h3>Donate with MTN MOMO SA</h3>
+        <p>To donate using MTN MOMO, follow these steps:</p>
+        <ul>
+            <li>Dial *120*151#</li>
+            <li>Select 'Send Money'</li>
+            <li>Enter the donation amount</li>
+            <li>Confirm the transaction</li>
+        </ul>
+    </div>
+
+
+    <div id="mySchool" class="section" style="display:none;">
+        <h3>Apply with MySchool</h3>
+        <form>
+            <label for="schoolName">School Name:</label>
+            <input type="text" id="schoolName" name="schoolName" placeholder="Enter school name" required>
+
+            <label for="cardNumber">MySchool Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter MySchool card number" required>
+
+            <button type="submit">Apply</button>
+        </form>
+    </div>
+
+
+    <div id="atm" class="section" style="display:none;">
+        <h3>Donate at Standard Bank ATM (M65)</h3>
+        <p>To donate at Standard Bank ATMs, follow these instructions:</p>
+        <ol>
+            <li>Insert your card into the ATM</li>
+            <li>Select 'Make a Payment'</li>
+            <li>Enter the M65 code for donations</li>
+            <li>Follow the on-screen instructions to complete your donation</li>
+        </ol>
+    </div>
+
+
+    <div id="legacy" class="section" style="display:none;">
+        <h3>Leave a Legacy</h3>
+        <p>Plan a long-term contribution by leaving a legacy. Contact us to discuss how you can include donations in your will or estate planning.</p>
+        <button>Contact Us</button>
+    </div>
+
 </div>
+
+<script>
+    function showSection(sectionId) {
+        // Hide all sections
+        var sections = document.getElementsByClassName('section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].style.display = 'none';
+        }
+
+        // Show the selected section
+        document.getElementById(sectionId).style.display = 'block';
+    }
+</script>

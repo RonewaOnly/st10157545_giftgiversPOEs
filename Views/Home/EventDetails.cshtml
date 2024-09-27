@@ -1,0 +1,13 @@
+﻿@model st10157545_giftgiversPOEs.Models.Events;
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="event-details">
+    <h1>@Model.event_name</h1>
+    <img src="@Model.image_url" alt="@Model.event_name" />
+    <p><strong>Date:</strong> @Model.event_date.ToString("MMMM dd, yyyy")</p>
+    <p><strong>Description:</strong> @Model.description</p>
+@*     <a href="/Home/RegisterForEvent?id=@Model.event_id" class="btn btn-primary">Register for this event</a>
+ *@</div>

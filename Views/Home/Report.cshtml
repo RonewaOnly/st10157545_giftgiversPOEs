@@ -1,6 +1,8 @@
-﻿
+﻿@model IEnumerable<st10157545_giftgiversPOEs.Models.Report>
 @{
+    ViewData["Title"] = "Report Here";
 }
+
 <style>
     .recorder {
         margin-bottom: 20px;
@@ -9,32 +11,6 @@
     button {
         margin: 5px;
         padding: 10px;
-    }
-
-    video, audio {
-        width: 100%;
-        margin-top: 10px;
-    }
-    .voice-note-container {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .record-btn, .send-btn {
-        background-color: #25D366;
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-    }
-
-    .voice-note-preview {
-        flex-grow: 1;
-    }
-
-    .voice-note-player {
-        width: 100%;
     }
 
     .card {
@@ -47,54 +23,54 @@
         background-color: #6c757d;
         border-color: #6c757d;
     }
-</style>
-<!--
-<div>
-    <form action="/" method="post">
-        <label for="issue_name">
-            Issue name: 
-            <input type="text" id="issue_name" name="issus_name"/>
-        </label>
-        <label>
-            Problem: 
-            <textarea cols="30" rows="5">
 
-            </textarea>
-        </label>
-        <input type="checkbox"  class="form-check-input" />
-        <label class="form-check-label">As As anonymous</label>
-        <button type="submit">Submit</button>
-    </form>
-    <div class="recorder" id="audioRecorder">
-        <h2>Audio Recorder</h2>
-        <button id="startAudio">Start Audio Recording</button>
-        <button id="stopAudio">Stop Audio Recording</button>
-        <audio id="audioPlayer" controls></audio>
-    </div>
-    <div class="recorder" id="videoRecorder">
-        <h2>Video Recorder</h2>
-        <button id="startVideo">Start Video Recording</button>
-        <button id="stopVideo">Stop Video Recording</button>
-        <video id="videoPlayer" controls></video>
-    </div>
-</div>
--->
+    .comments-section {
+        border-top: 1px solid lightgrey;
+        padding-top: 10px;
+    }
+
+    .comment {
+        margin: 10px 0;
+        padding: 5px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+
+        .comment strong {
+            color: darkblue;
+        }
+</style>
+
 <div class="container">
     <h1 class="text-center mb-4">We are here to help</h1>
     <div class="card">
         <div class="card-body">
-            <form>
+            <form method="post" action="@Url.Action("SubmitReport", "Home")">
                 <div class="form-group">
-                    <textarea class="form-control mb-3" rows="3" placeholder="Enter your message here"></textarea>
+                    <label for="disasterType">Disaster Type</label>
+                    <input type="text" class="form-control mb-3" name="disaster_type" id="disasterType" placeholder="Enter disaster type" required />
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control mb-3" rows="6" placeholder="Additional details"></textarea>
+                    <label for="description">Description</label>
+                    <textarea class="form-control mb-3" rows="3" name="description" id="description" placeholder="Enter your message here" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control mb-3" name="location" id="location" placeholder="Enter the location" required />
+                </div>
+                <div class="form-group">
+                    <label for="severityLevel">Severity Level</label>
+                    <select class="form-control mb-3" name="severity_level" id="severityLevel">
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">High</option>
+                    </select>
                 </div>
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="anonymousCheck">
-                    <label class="form-check-label" for="anonymousCheck">
-                        As anonymous
-                    </label>
+                    <input class="form-check-input" type="checkbox" id="is_anonymous" name="is_anonymous" />
+                    <label class="form-check-label" for="is_anonymous">Report as anonymous</label>
+
+                    <input type="hidden" name="username" value="@User.Identity.Name" />
                 </div>
                 <button type="submit" class="btn btn-secondary btn-block">Submit</button>
             </form>
@@ -102,134 +78,44 @@
     </div>
 </div>
 
-
-<div class="container-fluid">
-    <h3 class="text-center mb-2">Report Made by everyone</h3>
-    <hr/>
+<div class="container-fluid mt-4">
+    <h3 class="text-center mb-2">Reports Made by Everyone</h3>
+    <hr />
     <div class="reports">
-        <div class="indivial-card card">
-            <div class="card-header">
-                <img src="#" alt="user-icon"/>
-                <p>Name</p>|<span>anonymous USER</span>
-                 <span>18:00 pm</span>
-            </div>
-            <div class="card-body">
-                <p>post content ....</p>
-                <button>
-                    comments
-                </button>
-            </div>
-        </div>
+        @foreach (var report in Model)
+        {
+            <div class="individual-card card mb-3">
+                <div class="card-header">
+                    <p>@(report.is_anonymous ? "Anonymous User" : report.User?.Firstname)</p> |
+                    <span>@report.report_date.ToString("HH:mm tt")</span>
+                </div>
+                <div class="card-body">
+                    <h5>Disaster Type: @report.disaster_type</h5>
+                    <p>@report.description</p>
+                    <p><strong>Location:</strong> @report.location</p>
+                    <p><strong>Severity Level:</strong> @report.severity_level</p>
 
+                    <!-- Comment Form -->
+                    <form method="post" action="@Url.Action("AddComment", "Home")">
+                        <input type="hidden" name="reportId" value="@report.id" />
+                        <div class="form-group">
+                            <textarea class="form-control" name="commentContent" placeholder="Add a comment" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Comment</button>
+                    </form>
+
+                    <!-- Display Comments -->
+                    <div class="comments-section mt-3">
+                        @foreach (var comment in report.Comments) // Assume Comments are loaded with Report
+                        {
+                            <div class="comment">
+                                <p><strong>@comment.User?.Firstname ?? "Anonymous" :</strong> @comment.Content</p>
+                                <small>@comment.CreatedAt.ToString("HH:mm tt")</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-
 </div>
-<script>
-    let audioRecorder, videoRecorder;
-    let audioChunks = [], videoChunks = [];
-
-    const startAudioBtn = document.getElementById('startAudio');
-    const stopAudioBtn = document.getElementById('stopAudio');
-    const audioPlayer = document.getElementById('audioPlayer');
-
-    const startVideoBtn = document.getElementById('startVideo');
-    const stopVideoBtn = document.getElementById('stopVideo');
-    const videoPlayer = document.getElementById('videoPlayer');
-
-    // Audio Recording
-    startAudioBtn.addEventListener('click', async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            audioRecorder.addEventListener('dataavailable', event => {
-                audioChunks.push(event.data);
-            });
-
-            audioRecorder.addEventListener('stop', () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                audioPlayer.src = URL.createObjectURL(audioBlob);
-            });
-
-            audioRecorder.start();
-            startAudioBtn.disabled = true;
-            stopAudioBtn.disabled = false;
-        } catch (err) {
-            console.error('Error accessing audio:', err);
-        }
-    });
-
-    stopAudioBtn.addEventListener('click', () => {
-        if (audioRecorder && audioRecorder.state !== 'inactive') {
-            audioRecorder.stop();
-            startAudioBtn.disabled = false;
-            stopAudioBtn.disabled = true;
-        }
-    });
-
-    // Video Recording
-       //Let's update our code to handle this error more gracefully and provide an alternative option:
-
-    // ... (previous audio recording code remains the same)
-
-    // Video Recording
-    startVideoBtn.addEventListener('click', async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            videoRecorder = new MediaRecorder(stream);
-            videoChunks = [];
-
-            videoRecorder.addEventListener('dataavailable', event => {
-                videoChunks.push(event.data);
-            });
-
-            videoRecorder.addEventListener('stop', () => {
-                const videoBlob = new Blob(videoChunks, { type: 'video/webm' });
-                videoPlayer.src = URL.createObjectURL(videoBlob);
-            });
-
-            videoRecorder.start();
-            startVideoBtn.disabled = true;
-            stopVideoBtn.disabled = false;
-
-            // Stop recording after 3 minutes and 50 seconds (230000 milliseconds)
-            setTimeout(() => {
-                if (videoRecorder && videoRecorder.state !== 'inactive') {
-                    videoRecorder.stop();
-                    startVideoBtn.disabled = false;
-                    stopVideoBtn.disabled = true;
-                }
-            }, 230000);
-        } catch (err) {
-            console.error('Error accessing video:', err);
-            alert('Unable to access video device. Please check your camera permissions and try again.');
-
-            // Fallback to webcam feed without recording
-            tryWebcamFeedOnly();
-        }
-    });
-
-    function tryWebcamFeedOnly() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                videoPlayer.srcObject = stream;
-                videoPlayer.play();
-                alert('Webcam feed started. Note: This is not being recorded.');
-            })
-            .catch(err => {
-                console.error('Error accessing webcam:', err);
-                alert('Unable to access webcam. Please check your camera permissions and try again.');
-            });
-    }
-
-    // Add a new button for webcam feed
-    const webcamFeedBtn = document.createElement('button');
-    webcamFeedBtn.textContent = 'Start Webcam Feed';
-    webcamFeedBtn.addEventListener('click', tryWebcamFeedOnly);
-    document.getElementById('videoRecorder').appendChild(webcamFeedBtn);
-
-    // Initially disable stop buttons
-    stopAudioBtn.disabled = true;
-    stopVideoBtn.disabled = true;
-</script>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace st10157545_giftgiversPOEs.Models
@@ -22,7 +23,7 @@ namespace st10157545_giftgiversPOEs.Models
         [Required]
         [StringLength(50)]
         [Column("disaster_type")]
-        public string disaster_type { get; set; }
+        public string? disaster_type { get; set; }
 
         [Required]
         [Column("description")]
@@ -49,6 +50,8 @@ namespace st10157545_giftgiversPOEs.Models
         public string status { get; set; } = "Pending";
 
         public Users User { get; set; }
+        [BindNever]
+        public IEnumerable<Comment> Comments { get; set; }
     }
 
 }

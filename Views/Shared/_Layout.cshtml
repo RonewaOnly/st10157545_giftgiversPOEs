@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -35,17 +37,17 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Report">Report Here</a>
                             </li>
 
-                            <li class="nav-item dropdown">
+                            @* <li class="nav-item dropdown">
                                 <a class="nav-link text-dark dropdown-toggle" asp-area="" asp-controller="Home" asp-action="Privacy" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
 
                                 <ul class="dropdown-menu dropdown-menu-dark">
-                                    <li><a class="dropdown-item active" href="#">Current Appeals</a></li>
-                                    <li><a class="dropdown-item" href="#">Current News</a></li>
-                                    <li><a class="dropdown-item" href="#">Past Appleats</a></li>
+                                    <li><a class="dropdown-item active" asp-area="" asp-controller="Home" asp-action="Privacy">Current Appeals</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Privacy">Current News</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Privacy">Past Appleats</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Fund raisers </a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Privacy">Fund raisers </a></li>
                                 </ul>
-                            </li>
+                            </li> *@
                         }else if(User.HasClaim("UserType", UserType.Admin.ToString())){
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Home</a>
@@ -79,21 +81,24 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Tasks">Task</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="News">News</a>
-                            </li>
+@*                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="News" disabled>News</a>
+                            </li> *@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Profile">Profile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Volunteer" asp-action="Notifications">Notifications</a>
                             </li>
                         }
                         else
 
                         {
-                            <li>User type is a not found</li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Donations">Donations</a>
+                            </li>
 
                         }
-
-                           
                     </ul>
                 </div>
 
@@ -160,6 +165,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>   
 </html>

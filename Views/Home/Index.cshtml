@@ -1,4 +1,5 @@
-﻿@{
+﻿@model st10157545_giftgiversPOEs.Models.HomeViewController;
+@{
     ViewData["Title"] = "Home Page";
 }
 <!--CSS code-->
@@ -183,21 +184,35 @@
             margin-top: 10px;
             font-weight: bold;
         }
+
+    .goal-cards a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .goal-card {
+        transition: transform 0.3s ease;
+    }
+
+        .goal-card:hover {
+            transform: scale(1.05);
+        }
 </style>
 <!--html code-->
 <div class="slider-container">
     <div class="slider silde-back">
         <div class="slide active">
             <p class="message">Hope is the heartbeat of the soul, keeping us alive in the darkest times.</p>
-            <a href="/spread-hope" class="cta-button">Spread Hope</a>
+            <a href="@Url.Action("Donations","Home")" class="cta-button">Spread Hope</a>
         </div>
         <div class="slide">
             <p class="message">Your kindness today could change someone's entire life story.</p>
-            <a href="/be-kind" class="cta-button">Be Kind</a>
+            <a href="@Url.Action("Donations","Home")" class="cta-button">Be Kind</a>
         </div>
         <div class="slide">
             <p class="message">In giving, we receive the greatest gift of all: the joy of making a difference.</p>
-            <a href="/donate" class="cta-button">Give Now</a>
+            <a href="@Url.Action("Donations","Home")" class="cta-button">Give Now</a>
         </div>
     </div>
     <button class="prev">&lt;</button>
@@ -218,40 +233,28 @@
     </div>
 </div>
 <div class="impact-section">
-    <div class="impact">
-        <img src="../DefaultImages/bad_situation3.jpeg" alt="Somalia flooding">
-        <p>Somalia flooding</p>
-    </div>
-    <div class="impact">
-        <img src="../DefaultImages/bad_situation7.jpeg" alt="Gaza airstrikes">
-        <p>Gaza Airstrikes</p>
-    </div>
-
+    @foreach (var item in Model.ReliefProjects)
+    {
+        <div class="impact">
+@*             <img src="@item." alt="Somalia flooding">
+ *@            <p>@item.projectName</p>
+        </div>
+    }
 </div>
 
 <div class="primary-goals">
     <h2>Our primary goals</h2>
     <div class="goal-cards">
-        <div class="goal-card">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" alt="Disaster Response">
-            <p>Disaster Response</p>
-        </div>
-        <div class="goal-card">
-            <img src="../DefaultImages/Water_Provision.jpeg" alt="Water Provision">
-            <p>Water Provision</p>
-        </div>
-        <div class="goal-card">
-            <img src="../DefaultImages/Hunger Alleviation.jpeg" alt="Hunger Alleviation">
-            <p>Hunger Alleviation</p>
-        </div>
-        <div class="goal-card">
-            <img src="../DefaultImages/Human Development.jpeg" alt="Human Development">
-            <p>Human Development</p>
-        </div>
-        <div class="goal-card">
-            <img src="../DefaultImages/Education.jpeg" alt="Education">
-            <p>Education</p>
-        </div>
+        @foreach (var item in Model.Events)
+        {
+            <a href="@Url.Action("EventDetails", "Home", new { id = item.event_id })">
+                <div class="goal-card">
+                    <img src="@item.image_url" alt="@item.event_name">
+                    <p>@item.event_name</p>
+                </div>
+            </a>
+        }
+        
     </div>
 </div>
 <img src="../DefaultImages/PayGate-Card-Brand-Logos-PayGatePlus.png" style="width: 100vw;" alt="payment options"/>

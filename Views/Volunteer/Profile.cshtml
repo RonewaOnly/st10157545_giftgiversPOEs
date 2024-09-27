@@ -1,28 +1,120 @@
-﻿@{
+﻿@model st10157545_giftgiversPOEs.Models.Volunteers;
+
+@{
     ViewData["Title"] = "Profile";
 }
 
-<div class="profile-section text-center">
-    <img src="user_icon.png" class="rounded-circle" alt="User Profile" />
-    <h4 class="text-danger">Tshepo</h4>
-    <p>Active</p>
+<div class="container mt-5">
+    <div class="profile-section text-center border rounded p-4 shadow">
+        <img src="@Model.image_url" class="rounded-circle" alt="User Profile" style="width: 150px; height: 150px;" />
+        <h4 class="text-danger">@Model.username</h4>
+        <p class="text-muted">
+            Status: <span class="badge @(Model.Status ? "bg-success" : "bg-danger")">
+                @(Model.Status ? "Active" : "Inactive")
+            </span>
+        </p>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Event Management</td>
-                <td>Active</td>
-            </tr>
-            <tr>
-                <td>Disaster Relief</td>
-                <td>Pending</td>
-            </tr>
-        </tbody>
-    </table>
+        <hr />
+
+        <h5>Assigned Projects</h5>
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ReliefProjects != null && Model.ReliefProjects.Any())
+                {
+                    foreach (var project in Model.ReliefProjects)
+                    {
+                        <tr>
+                            <td>@project.projectName</td>
+                            <td>@project.projectDescription</td>
+@*                             <td><span class="badge @(project.Status ? "bg-success" : "bg-warning")">@project.Status ? "Active" : "Pending"</span></td>
+ *@                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center">No assigned projects found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr />
+
+        <div class="profile-actions">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+        </div>
+    </div>
 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="UpdateProfile" asp-action="UpdateProfile" method="post" enctype="multipart/form-data">
+                    <div class="mb-3 text-center">
+                        <img id="modalProfileImage" src="@Model.image_url" class="rounded-circle" alt="User Profile" style="width: 100px; height: 100px;" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="image_url" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="image_url" name="image_url" accept="image/*" onchange="previewModalImage(event)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="@Model.username" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="@Model.email" required />
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="status" name="status" value="true" @(Model.Status ? "checked" : "") />
+                        <label class="form-check-label" for="status">Active</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">@TempData["Error"]</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewModalImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const modalProfileImage = document.getElementById('modalProfileImage');
+                modalProfileImage.src = e.target.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}

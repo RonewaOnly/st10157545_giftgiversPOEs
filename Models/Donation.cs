@@ -10,10 +10,10 @@ namespace st10157545_giftgiversPOEs.Models
         [Key]
         public string donation_id { get; set; } = Guid.NewGuid().ToString(); 
         public string item_name { get; set; }
-        public string item_category { get; set; }
+        public string? item_category { get; set; } = "unknown";
         public int item_quantity { get; set; }
         public DateTime donation_date { get; set; }
-        public decimal? cash_amount { get; set; }
+        public decimal? cash_amount { get; set; } = 0;
         public string fullnameDonator { get; set; }
 
         [ForeignKey(nameof(Users))]
@@ -35,12 +35,12 @@ namespace st10157545_giftgiversPOEs.Models
 
         // Navigation properties
         [BindNever]
-        public virtual Users User { get; set; }
+        public virtual Users? User { get; set; }
         public virtual Admins Admin { get; set; }
-        public virtual Volunteers Volunteer { get; set; }
-        public virtual Events Event { get; set; }
+        public virtual Volunteers? Volunteer { get; set; }
+        public virtual Events? Event { get; set; }
 
-        public virtual ReliefProject ReliefProject { get; set; }
+        public virtual ReliefProject? ReliefProject { get; set; }
 
     }
 }

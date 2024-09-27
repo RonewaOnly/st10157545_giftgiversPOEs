@@ -1,31 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using st10157545_giftgiversPOEs.Models;
+using st10157545_giftgiversPOEs.Services;
 
 namespace st10157545_giftgiversPOEs.Controllers
 {
+    //[Authorize(Policy = "AdminPolicy")]
     public class AdminController : Controller
     {
         private readonly DatabaseController _context;
 
-        public AdminController(DatabaseController context)
+        private readonly EmailService _emailService;
+        private readonly NotificationService _notificationService;
+
+        public AdminController(DatabaseController context, EmailService emailService, NotificationService notificationService)
         {
             _context = context;
-
-
-
+            _emailService = emailService;
+            _notificationService = notificationService;
         }
+
+
         public IActionResult Index()
         {
             return View();
         }
         public IActionResult Donations()
         {
+#pragma warning disable CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
             var donations = _context.Donations
-       .Include(d => d.Event)
-       .AsNoTracking()
-       .ToList();
+                .Include(d => d.Event)
+                .DefaultIfEmpty()  
+                .AsNoTracking()
+                .ToList();
+#pragma warning restore CS8634 // The type cannot be used as type parameter in the generic type or method. Nullability of type argument doesn't match 'class' constraint.
             return View(donations);
         }
         public IActionResult Donation_Add()
@@ -96,19 +106,14 @@ namespace st10157545_giftgiversPOEs.Controllers
         public IActionResult Donation_Edit(string id)
         {
             var donation = _context.Donations.Find(id);
-            if (donation == null) return NotFound();
-
-            // Load admins for the dropdown
-            var admins = _context.Admins.Select(a => new SelectListItem
+            if (donation == null)
             {
-                Value = a.admin_id,
-                Text = a.firstname + " " + a.lastname
-            }).ToList();
+                return NotFound();
+            }
 
-            // Create the view model and populate the AdminList
             var model = new DonationViewModel
             {
-                DonationId = donation.donation_id,
+                DonationId = donation.donation_id, // Make sure this is set
                 ItemName = donation.item_name,
                 ItemCategory = donation.item_category,
                 ItemQuantity = donation.item_quantity,
@@ -116,11 +121,16 @@ namespace st10157545_giftgiversPOEs.Controllers
                 CashAmount = donation.cash_amount,
                 FullNameDonator = donation.fullnameDonator,
                 AdminId = donation.admin_id,
-                VolunteerId = donation.volunteer_id,
-                AdminList = admins // Pass the list of admins to the view model
+                AdminList = _context.Admins.Select(a => new SelectListItem
+                {
+                    Value = a.admin_id,
+                    Text = a.firstname + " " + a.lastname
+                }).ToList()
             };
+
             return View(model);
         }
+
 
         // POST: Donation_Edit
         [HttpPost]
@@ -140,6 +150,7 @@ namespace st10157545_giftgiversPOEs.Controllers
                 var donation = _context.Donations.Find(model.DonationId);
                 if (donation != null)
                 {
+                    donation.donation_id = model.DonationId;
                     donation.item_name = model.ItemName;
                     donation.item_category = model.ItemCategory;
                     donation.item_quantity = model.ItemQuantity;
@@ -148,10 +159,31 @@ namespace st10157545_giftgiversPOEs.Controllers
                     donation.fullnameDonator = model.FullNameDonator;
                     donation.admin_id = model.AdminId; // Update the selected admin
 
-                    // Update other properties as needed
+                    try
+                    {
+                        _context.SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error saving changes: {ex.Message}");
+                    }
 
-                    _context.SaveChanges();
                     return RedirectToAction("Donations");
+                }
+                else
+                {
+                    Console.WriteLine("Donation not found.");
+                    // Optionally return an error message to the view
+                    return View(model);
+                }
+            }
+
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
                 }
             }
 
@@ -177,27 +209,39 @@ namespace st10157545_giftgiversPOEs.Controllers
 
             // Load events and volunteers for assignment
             ViewBag.Events = new SelectList(_context.Events, "event_id", "event_name");
-            ViewBag.Volunteers = new SelectList(_context.Volunteers, "volunteer_id", "firstname, lastname"); // Use correct property name
+            ViewBag.Volunteers = new SelectList(_context.Volunteers, "volunteer_id", "firstname"); // Use correct property name
 
             return View(donation);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] // Ensure CSRF protection
-        public IActionResult Donation_Assign(string id, int? eventId, int? volunteerId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Donation_Assign(string id, int? eventId, int? volunteerId)
         {
             var donation = _context.Donations.Find(id);
             if (donation != null)
             {
                 donation.event_id = eventId;
                 donation.volunteer_id = volunteerId;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+
+                var volunteer = await _context.Volunteers.FindAsync(volunteerId);
+                if (volunteer != null)
+                {
+                    string subject = "Task Assignment Notification";
+                    string body = $"Hello {volunteer.firstname},<br/>" +
+                                  $"You have been assigned to a donation event.<br/>" +
+                                  $"Event ID: {eventId}.<br/>" +
+                                  "Please check your dashboard for more details.";
+
+                    await _emailService.SendEmailAsync(volunteer.email, subject, body);
+                }
+
                 return RedirectToAction("Donations");
             }
 
-            // Optionally handle the case where the donation is not found
             ModelState.AddModelError("", "Donation not found.");
-            return View(donation); // Return the same view with an error message
+            return View(donation);
         }
 
 
@@ -344,16 +388,25 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         public IActionResult EventDetails(int id)
         {
-            var eventDetails = _context.Events
-        .Include(e => e.Admin)        // Eager load the Admin
-        .Include(e => e.Donations)    // Eager load the Donations
-        .FirstOrDefault(e => e.event_id == id);
-            if (eventDetails == null)
+            try
             {
-                return NotFound();
+                var eventDetails = _context.Events
+                    .Include(e => e.Admin)        // Eager load the Admin
+                    .Include(e => e.Donations)    // Eager load the Donations
+                    .FirstOrDefault(e => e.event_id == id);
+
+                if (eventDetails == null)
+                {
+                    return NotFound();
+                }
+
+                return View(eventDetails);
             }
-            Console.WriteLine($"Event Table: {_context.Events.Find(id)}");
-            return View(eventDetails);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in EventDetails: {ex.Message}");
+                return View("Error", new ErrorViewModel { RequestId = HttpContext.TraceIdentifier, Message = "An error occurred while fetching event details." });
+            }
         }
         [HttpGet]
         public IActionResult EditEvent(int id)
@@ -432,8 +485,17 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         public IActionResult Reports()
         {
-            var reports = _context.Reports.ToList();
-            return View(reports);
+            try
+            {
+                var reports = _context.Reports.ToList();
+                return View(reports);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while fetching reports. Please try again later.");
+                Console.WriteLine($"Error in Reports: {ex.Message}");
+                return View(); // Return an empty view with an error.
+            }
         }
         public IActionResult Details(int id)
         {
@@ -524,17 +586,33 @@ namespace st10157545_giftgiversPOEs.Controllers
         }
 
         [HttpPost]
-        public IActionResult AssignVolunteersToProjects(int selectedVolunteerId, int selectedProjectId)
+        public async Task<IActionResult> AssignVolunteersToProjects(int selectedVolunteerId, int selectedProjectId)
         {
-            var project = _context.ReliefProjects.Find(selectedProjectId);
+            var project = await _context.ReliefProjects.FindAsync(selectedProjectId);
             if (project != null)
             {
                 project.volunteer_id = selectedVolunteerId;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+
+                var admins = await _context.Admins.Select(a => a.admin_id).ToListAsync();
+                var volunteers = await _context.Volunteers.Select(v => v.volunteer_id).ToListAsync();
+
+                // Notify all admins
+                foreach (var admin in admins)
+                {
+                    await _notificationService.CreateNotificationAsync("A volunteer has been assigned a task ", admin);
+                }
+
+                // Notify all volunteers
+                foreach (var volunteer in volunteers)
+                {
+                    await _notificationService.CreateNotificationAsync("Volunteer an admin as assigned you in a relief project check it on task page", volunteer.ToString());
+                }
             }
 
-            return RedirectToAction("Volunteers");
+            return RedirectToAction("Responses");
         }
+
 
 
         [HttpGet]
@@ -562,22 +640,67 @@ namespace st10157545_giftgiversPOEs.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateReliefProject(ReliefProject reliefProject)
         {
+            // Remove unnecessary properties from model state
             ModelState.Remove("Admin");
             ModelState.Remove("Resource");
             ModelState.Remove("Volunteer");
             ModelState.Remove("resourcesUsed");
             ModelState.Remove("adminAssignedBy");
+
+            if (reliefProject.startDate == DateOnly.MinValue || reliefProject.endDate == DateOnly.MinValue)
+            {
+                ModelState.AddModelError(nameof(reliefProject.startDate), "Start date cannot be empty or invalid.");
+                // You can also log the values here for further investigation.
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(reliefProject);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Responses));
-            }
-            ViewBag.Admins = _context.Admins.ToList();
-            ViewBag.Volunteers = _context.Volunteers.ToList();
-            ViewBag.Resources = _context.Resources.ToList();
+                try
+                {
+                    // Add the relief project to the context
+                    _context.Add(reliefProject);
+                    await _context.SaveChangesAsync();
 
-            // Log ModelState errors (for debugging)
+                    // Fetch admin and volunteer IDs safely
+                    var admins = await _context.Admins.Select(a => a.admin_id).ToListAsync();
+                    var volunteers = await _context.Volunteers.Select(v => v.volunteer_id).ToListAsync();
+
+                    // Notify all admins
+                    foreach (var admin in admins)
+                    {
+                        await _notificationService.CreateNotificationAsync("A new relief project has been created.", admin);
+                    }
+
+                    // Notify all volunteers
+                    foreach (var volunteer in volunteers)
+                    {
+                        await _notificationService.CreateNotificationAsync("A new relief project is available for volunteers.", volunteer.ToString());
+                    }
+
+                    return RedirectToAction(nameof(Responses));
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    // Log the error and add a model state error for the user
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the relief project. Please try again.");
+                    Console.WriteLine($"Database update error: {dbEx.Message}"); // Log to console or a logger
+                    return RedirectToAction(nameof(Responses));
+
+                }
+                catch (Exception ex)
+                {
+                    // General error handling
+                    ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again.");
+                    Console.WriteLine($"Unexpected error: {ex.Message}"); // Log to console or a logger
+                }
+            }
+
+            // If we get to this point, something failed; reload necessary data for the view
+            ViewBag.Admins = await _context.Admins.ToListAsync();
+            ViewBag.Volunteers = await _context.Volunteers.ToListAsync();
+            ViewBag.Resources = await _context.Resources.ToListAsync();
+
+            // Log model state errors for debugging purposes
             foreach (var key in ModelState.Keys)
             {
                 var errors = ModelState[key].Errors;
@@ -586,31 +709,51 @@ namespace st10157545_giftgiversPOEs.Controllers
                     Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
                 }
             }
+
             return View(reliefProject);
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditReliefProject(int id)
+        public IActionResult EditReliefProject(int id)
         {
-            var reliefProject = await _context.ReliefProjects.FindAsync(id);
-            if (reliefProject == null)
+            var project = _context.ReliefProjects.Find(id);
+            
+            if (project == null)
             {
                 return NotFound();
             }
+
             ViewBag.Admins = _context.Admins.ToList();
             ViewBag.Volunteers = _context.Volunteers.ToList();
             ViewBag.Resources = _context.Resources.ToList();
-            return View(reliefProject);
+
+            return View(project);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditReliefProject(int id, ReliefProject reliefProject)
+        public async Task<IActionResult> EditReliefProject(int relief_id, ReliefProject reliefProject)
         {
-            if (id != reliefProject.relief_id)
+            ModelState.Remove("Admin");
+            ModelState.Remove("Resource");
+            ModelState.Remove("Volunteer");
+
+            //if (reliefProject.teamAssigned != null)
+            //{
+            //    if (!int.TryParse(reliefProject.teamAssigned, out int teamId))
+            //    {
+            //        return BadRequest("Invalid team assigned.");
+            //    }
+            //    // Now you can use teamId safely
+            //}
+
+            if (relief_id != reliefProject.relief_id)
             {
                 return NotFound();
             }
+
+            Console.WriteLine($"Data type of teamAssigned:{reliefProject.teamAssigned.GetType()} ");
 
             if (ModelState.IsValid)
             {
@@ -618,6 +761,25 @@ namespace st10157545_giftgiversPOEs.Controllers
                 {
                     _context.Update(reliefProject);
                     await _context.SaveChangesAsync();
+
+                    //var volunteerIds = reliefProject.teamAssigned?.Split(',').Select(int.Parse);
+                    //if (volunteerIds != null)
+                    //{
+                    //    foreach (var volunteerId in volunteerIds)
+                    //    {
+                    //        var volunteer = await _context.Volunteers.FindAsync(volunteerId);
+                    //        if (volunteer != null)
+                    //        {
+                    //            string subject = "Relief Project Updated";
+                    //            string body = $"Hello {volunteer.firstname},<br/>" +
+                    //                          $"The relief project you are assigned to has been updated.<br/>" +
+                    //                          $"Project ID: {reliefProject.relief_id}.<br/>" +
+                    //                          "Please check your dashboard for more details.";
+
+                    //            await _emailService.SendEmailAsync(volunteer.email, subject, body);
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -632,11 +794,22 @@ namespace st10157545_giftgiversPOEs.Controllers
                 }
                 return RedirectToAction(nameof(Responses));
             }
+
             ViewBag.Admins = _context.Admins.ToList();
             ViewBag.Volunteers = _context.Volunteers.ToList();
             ViewBag.Resources = _context.Resources.ToList();
+
+            foreach (var key in ModelState.Keys)
+            {
+                var errors = ModelState[key].Errors;
+                foreach (var error in errors)
+                {
+                    Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
+                }
+            }
             return View(reliefProject);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -659,22 +832,26 @@ namespace st10157545_giftgiversPOEs.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AssignTeam(int id)
+        public IActionResult AssignTeam(int relief_id)
         {
-            var reliefProject = await _context.ReliefProjects.FindAsync(id);
+            var reliefProject =  _context.ReliefProjects.Find(relief_id);
             if (reliefProject == null)
             {
                 return NotFound();
             }
-            ViewBag.Volunteers = _context.Volunteers.ToList();
-            return View(reliefProject);
+
+            // Ensure Volunteers data is fetched correctly
+            ViewBag.Volunteers =  _context.Volunteers.ToList();
+            Console.WriteLine($"Volunteer: {ViewBag.Volunteers}");
+
+            return View(reliefProject);  // Ensure there is a view in Views/YourController/AssignTeam.cshtml
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AssignTeam(int id, string teamLeader, List<int> teamMembers)
+        public async Task<IActionResult> AssignTeam(int relief_id, string teamLeader, List<int> teamMembers)
         {
-            var reliefProject = await _context.ReliefProjects.FindAsync(id);
+            var reliefProject = await _context.ReliefProjects.FindAsync(relief_id);
             if (reliefProject == null)
             {
                 return NotFound();
@@ -685,6 +862,20 @@ namespace st10157545_giftgiversPOEs.Controllers
 
             _context.Update(reliefProject);
             await _context.SaveChangesAsync();
+            var admins = await _context.Admins.Select(a => a.admin_id).ToListAsync();
+            var volunteers = await _context.Volunteers.Select(v => v.volunteer_id).ToListAsync();
+
+            // Notify all admins
+            foreach (var admin in admins)
+            {
+                await _notificationService.CreateNotificationAsync("A volunteer has been assigned a task ", admin);
+            }
+
+            // Notify all volunteers
+            foreach (var volunteer in volunteers)
+            {
+                await _notificationService.CreateNotificationAsync("Volunteer an admin as assigned you in a relief project check it on task page", volunteer.ToString());
+            }
 
             return RedirectToAction(nameof(Responses));
         }

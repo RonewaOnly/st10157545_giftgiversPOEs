@@ -1,4 +1,4 @@
-﻿@model st10157545_giftgiversPOEs.Models.VolunteerViewModel 
+﻿@model st10157545_giftgiversPOEs.Models.VolunteerViewModel
 
 @{
     ViewData["Title"] = "Volunteers Panel";
@@ -29,15 +29,18 @@
                 <td>@volunteer.age</td>
                 <td>@volunteer.area</td>
                 <td>@volunteer.UserType</td>
-@*                 <td>@volunteer.City</td>
- *@                <td>@volunteer.email</td>
+                <td>@volunteer.area</td> <!-- Updated to display City/Town -->
+                <td>@volunteer.email</td>
                 <td>@volunteer.phone</td>
-@*                 <td>@(volunteer.Status ? "Active" : "Inactive")</td>
- *@                <td>
+                <td>@(volunteer.Status ? "Active" : "Inactive")</td> <!-- Added status display -->
+                <td>
                     <a href="@Url.Action("Volunteer_Details", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-info">View</a>
                     <a href="@Url.Action("Volunteer_Edit", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Volunteer_Delete", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-danger">Delete</a>
-                    <a href="@Url.Action("Volunteer_Assign", "Admin", new { volunteerId = volunteer.volunteer_id })" class="btn btn-primary">Assign to Event</a>
+                    <form asp-action="Volunteer_Delete" asp-route-id="@volunteer.volunteer_id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Volunteer?');">Delete</button>
+                    </form>
+@*                     <a href="@Url.Action("Volunteer_Delete", "Admin", new { id = volunteer.volunteer_id })" class="btn btn-danger">Delete</a>
+ *@                    <a href="@Url.Action("Volunteer_Assign", "Admin", new { volunteerId = volunteer.volunteer_id })" class="btn btn-primary">Assign to Event</a>
                 </td>
             </tr>
         }
@@ -47,8 +50,12 @@
 <div>
     <h3>Assign Volunteers to Relief Projects</h3>
     <form asp-action="AssignVolunteersToProjects" method="post">
-        <select asp-for="SelectedVolunteerId" asp-items="Model.VolunteersList"></select>
-        <select asp-for="SelectedProjectId" asp-items="Model.ProjectsList"></select>
+        <label for="SelectedVolunteerId">Select Volunteer:</label>
+        <select asp-for="SelectedVolunteerId" asp-items="Model.VolunteersList" class="form-control"></select>
+
+        <label for="SelectedProjectId">Select Project:</label>
+        <select asp-for="SelectedProjectId" asp-items="Model.ProjectsList" class="form-control"></select>
+
         <button type="submit" class="btn btn-success">Assign</button>
     </form>
 </div>

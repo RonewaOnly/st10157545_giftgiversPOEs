@@ -31,6 +31,10 @@ builder.Services.AddHttpClient();
 
 // Register the session service
 builder.Services.AddTransient<SessionService>();
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
+builder.Services.AddTransient<EmailService>();
+
 
 // Register the background service
 builder.Services.AddHostedService<TokenRefreshService>();
@@ -41,6 +45,7 @@ builder.Services.AddScoped<GuardianNewsService>();
 builder.Services.AddScoped<FacebookService>();
 builder.Services.AddScoped<InstagramService>();
 builder.Services.AddScoped<TwitterService>();
+builder.Services.AddScoped<NotificationService>();
 
 
 // Add services to the container.
@@ -75,6 +80,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
     options.AddPolicy("VolunteerPolicy", policy => policy.RequireRole("Volunteer"));
 });
+builder.Configuration.AddEnvironmentVariables();
 
 var app = builder.Build();
 
@@ -95,12 +101,11 @@ app.UseAuthorization();
 
 app.UseMiddleware<TokenMiddleware>(); // For automatic token refreshment 
 
-// Custom middleware to redirect based on user roles
 app.Use(async (context, next) =>
 {
     if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
     {
-        if (context.User.IsInRole(UserType.Admin.ToString()))
+        if (context.User.IsInRole("Admin"))
         {
             if (!context.Request.Path.StartsWithSegments("/Admin"))
             {
@@ -108,7 +113,7 @@ app.Use(async (context, next) =>
                 return;
             }
         }
-        else if (context.User.IsInRole(UserType.User.ToString()))
+        else if (context.User.IsInRole("User"))
         {
             if (!context.Request.Path.StartsWithSegments("/Home"))
             {
@@ -116,7 +121,7 @@ app.Use(async (context, next) =>
                 return;
             }
         }
-        else if (context.User.IsInRole(UserType.Volunteer.ToString()))
+        else if (context.User.IsInRole("Volunteer"))
         {
             if (!context.Request.Path.StartsWithSegments("/Volunteer"))
             {
@@ -125,7 +130,6 @@ app.Use(async (context, next) =>
             }
         }
     }
-
     await next.Invoke();
 });
 
@@ -141,7 +145,7 @@ app.MapControllerRoute(
 
 // Route for volunteer users
 app.MapControllerRoute(
-    name: "volunteer",
+    name: "Volunteer",
     pattern: "Volunteer/{controller=Volunteer}/{action=Index}/{id?}");
 
 app.Run();

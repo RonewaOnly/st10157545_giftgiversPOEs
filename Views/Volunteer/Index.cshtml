@@ -1,34 +1,95 @@
-﻿@{
+﻿@model st10157545_giftgiversPOEs.Models.HomeViewModel;
+
+@{
     ViewData["Title"] = "Home";
 }
 
 <div class="jumbotron text-center">
     <h1>Welcome Back @User.Identity.Name</h1>
-    <p> @User.Identity.Name, we will be working...</p>
+    <p>@User.Identity.Name, we will be working...</p>
 </div>
 
 <div class="text-center">
     <h2>Services</h2>
     <div class="row">
-        <div class="col-md-2 flex-column">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" class="rounded-circle " width="200" height="200" alt="Disaster Relief" />
-            <p>Disaster Relief</p>
-        </div>
-        <div class="col-md-2">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" class="rounded-circle" width="200" height="200" alt="Healthcare" />
-            <p>Healthcare</p>
-        </div>
-        <div class="col-md-2">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" class="rounded-circle" width="200" height="200" alt="Water Provision" />
-            <p>Water Provision</p>
-        </div>
-        <div class="col-md-2">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" class="rounded-circle" width="200" height="200" alt="Education" />
-            <p>Education</p>
-        </div>
-        <div class="col-md-2">
-            <img src="../DefaultImages/disaster_Reponse.jpeg" class="rounded-circle" width="200" height="200" alt="Human Development" />
-            <p>Human Development</p>
+        @foreach (var project in Model.ReliefProjects)
+        {
+            <div class="col-md-2 mb-4">
+                <div class="card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#serviceModal" onclick="showServiceInfo('@project.projectName', '@project.projectDescription')">
+@*                     <img src="@project.ImageUrl" class="card-img-top rounded-circle" alt="@project.Name" width="200" height="200" />
+ *@                    <div class="card-body">
+                        <h5 class="card-title">@project.projectName</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <h2>Upcoming Events</h2>
+    <div class="row">
+        @foreach (var eventItem in Model.Events)
+        {
+            <div class="col-md-2 mb-4">
+                <div class="card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#eventModal" onclick="showEventInfo('@eventItem.event_name', '@eventItem.description')">
+                    <img src="@eventItem.image_url" class="card-img-top rounded-circle" alt="@eventItem.event_name" width="200" height="200" />
+                    <div class="card-body">
+                        <h5 class="card-title">@eventItem.event_name</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Service Information Modal -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel">Service Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="serviceName"></h6>
+                <p id="serviceDescription"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Event Information Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6 id="eventTitle"></h6>
+                <p id="eventDescription"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showServiceInfo(name, description) {
+            document.getElementById('serviceName').innerText = name;
+            document.getElementById('serviceDescription').innerText = description;
+        }
+
+        function showEventInfo(title, description) {
+            document.getElementById('eventTitle').innerText = title;
+            document.getElementById('eventDescription').innerText = description;
+        }
+    </script>
+
+}

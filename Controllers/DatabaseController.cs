@@ -20,6 +20,11 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         public DbSet<Events> Events { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
+
+
+        public DbSet<Comment> Comments { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -125,6 +130,7 @@ namespace st10157545_giftgiversPOEs.Controllers
                     .WithMany()
                     .HasForeignKey(r => r.user_id)
                     .OnDelete(DeleteBehavior.SetNull);
+
             });
 
             // RESOURCES entity configuration
@@ -246,6 +252,18 @@ namespace st10157545_giftgiversPOEs.Controllers
                     .HasForeignKey(e => e.admin_id)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            //Comment entity 
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.ToTable("Comments");
+
+                entity.HasKey(com => com.Id);
+
+                entity.HasOne(com  => com.Report).WithMany(a => a.Comments).HasForeignKey(com => com.report_id);
+                entity.HasOne(com => com.User).WithMany().HasForeignKey(entity => entity.user_id);
+            }
+            );
 
 
         }

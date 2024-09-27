@@ -30,6 +30,9 @@ namespace st10157545_giftgiversPOEs.Models
         [StringLength(20)]
         public string? gender { get; set; } = "I prefer not to say";
 
+        [StringLength(255)]
+
+        public string? image_url { get; set; } = "https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?t=st=1727442505~exp=1727446105~hmac=9dbba621d4863c1663b0c292b7c1fb4cba2307bf6b265ea3cf04304b1b482a70&w=740";
         [Required]
         public string? qualifications { get; set; }
 

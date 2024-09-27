@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Notification>
+
+<h2>Your Notifications</h2>
+
+<ul id="notification-list" style="list-style: none; padding-left: 0;">
+    @foreach (var notification in Model)
+    {
+        <li id="notification-@notification.Id" style="border-bottom: 1px solid #ddd; padding: 10px; margin-bottom: 5px;">
+            <span style="display: block; font-size: 1.1em; color: #333; margin-bottom: 5px;">
+                @notification.Message
+            </span>
+            <button type="button"
+                    class="mark-read-btn"
+                    data-id="@notification.Id"
+                    style="background-color: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">
+                Mark as Read
+            </button>
+        </li>
+    }
+</ul>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.mark-read-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const notificationId = this.getAttribute('data-id');
+
+                // Send AJAX request to mark the notification as read
+                fetch('@Url.Action("MarkAsRead", "Notifications")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: `id=${notificationId}`
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Add a class to visually indicate the notification is read
+                        document.getElementById(`notification-${notificationId}`).style.opacity = "0.5";
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+}
+

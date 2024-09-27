@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
         <label asp-for="teamAssigned"></label>
-        <input asp-for="teamAssigned" class="form-control" />
+        <input asp-for="teamAssigned" type="text" class="form-control" />
         <span asp-validation-for="teamAssigned" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -47,6 +47,8 @@
     <div class="form-group">
         <label asp-for="endDate"></label>
         <input asp-for="endDate" type="date" class="form-control" />
+        <span asp-validation-for="endDate" class="text-danger"></span>
+
     </div>
     <div class="form-group">
         <label asp-for="additialTeams"></label>

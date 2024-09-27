@@ -13,19 +13,18 @@ namespace st10157545_giftgiversPOEs.Models
         [StringLength(120)]
         public string projectName { get; set; }
 
-        public string projectDescription { get; set; }
+        public string? projectDescription { get; set; }
 
         [Required]
         [StringLength(200)]
         public string affectedArea { get; set; }
 
-        [Required]
         [StringLength(20)]
-        public string teamAssigned { get; set; }
+        public string? teamAssigned { get; set; }
 
         [Required]
         [StringLength(140)]
-        public string teamLeader { get; set; }
+        public string? teamLeader { get; set; }
 
         public double totalCost { get; set; }
 
@@ -33,15 +32,15 @@ namespace st10157545_giftgiversPOEs.Models
         public string resourcesUsed { get; set; } = "nothing";
 
         [Required]
-        public DateTime startDate { get; set; }
+        public DateOnly? startDate { get; set; }
 
-        public DateTime? endDate { get; set; }
+        public DateOnly? endDate { get; set; }
 
-        public string additialTeams { get; set; } = "OPTIONAL";
+        public string? additialTeams { get; set; } = "OPTIONAL";
 
-        public string adminAssignedBy { get; set; } = "OPTIONAL";
+        public string? adminAssignedBy { get; set; } = "OPTIONAL";
 
-        public int teamMembers_injured { get; set; }
+        public int? teamMembers_injured { get; set; }
 
         // Foreign keys
         [Required]

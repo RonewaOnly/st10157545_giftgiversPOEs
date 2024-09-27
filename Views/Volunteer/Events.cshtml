@@ -1,27 +1,64 @@
-﻿@{
+﻿@model IEnumerable<st10157545_giftgiversPOEs.Models.Events>
+@{
     ViewData["Title"] = "Events";
 }
 
 <div class="text-center">
     <h2>Events</h2>
     <div class="row">
-        <div class="col-md-4">
-            <img src="flooding.jpg" class="img-fluid" alt="Flooding Crisis" />
-            <h4>Flooding Crisis</h4>
-            <p>The Gaza Strip, a heavily populated Palestinian area...</p>
-            <a href="#" class="btn btn-primary">Learn More</a>
-        </div>
-        <div class="col-md-4">
-            <img src="flooding.jpg" class="img-fluid" alt="Flooding Crisis" />
-            <h4>Flooding Crisis</h4>
-            <p>The Gaza Strip, a heavily populated Palestinian area...</p>
-            <a href="#" class="btn btn-primary">Learn More</a>
-        </div>
-        <div class="col-md-4">
-            <img src="flooding.jpg" class="img-fluid" alt="Flooding Crisis" />
-            <h4>Flooding Crisis</h4>
-            <p>The Gaza Strip, a heavily populated Palestinian area...</p>
-            <a href="#" class="btn btn-primary">Learn More</a>
+        @foreach (var events in Model)
+        {
+            <div class="col-md-4">
+                <img src="@events.image_url" class="img-fluid" alt="Event Image" />
+                <h4>@events.event_name</h4>
+                <p>
+                    
+                        @events.description
+                </p>                
+                <!-- Learn More Button -->
+                <Button class="btn btn-primary" data-toggle="modal" data-target="#eventModal"
+                        onclick="showEventDetails('@events.event_name', '@events.description', '@events.location', '@events.event_date')">
+                    Learn More
+                </Button>
+
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 id="modalEventName"></h4>
+                <p><strong>Description:</strong> <span id="modalEventDescription"></span></p>
+                <p><strong>Location:</strong> <span id="modalEventLocation"></span></p>
+                <p><strong>Date:</strong> <span id="modalEventDate"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Script to Populate Modal with Event Data -->
+@section Scripts {
+
+<script type="text/javascript">
+    function showEventDetails(eventName, eventDescription, eventLocation, eventDate) {
+        document.getElementById('modalEventName').innerText = eventName;
+        document.getElementById('modalEventDescription').innerText = eventDescription;
+        document.getElementById('modalEventLocation').innerText = eventLocation;
+        document.getElementById('modalEventDate').innerText = new Date(eventDate).toLocaleString();
+    }
+</script>
+
+}

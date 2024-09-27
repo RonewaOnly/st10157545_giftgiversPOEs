@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using st10157545_giftgiversPOEs.Models;
+using st10157545_giftgiversPOEs.Services;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,11 +15,13 @@ namespace st10157545_giftgiversPOEs.Controllers
 
         private readonly DatabaseController _context;
         private readonly SessionService _sessionService;
+        private readonly NotificationService _notificationService;
 
-        public AuthController(DatabaseController context, SessionService sessionService)
+        public AuthController(DatabaseController context, SessionService sessionService, NotificationService notificationService)
         {
             _context = context;
             _sessionService = sessionService;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -57,10 +60,21 @@ namespace st10157545_giftgiversPOEs.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
+
                     return RedirectToAction("Index", "Home");
+                }else if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "User not found.");
+                    return View(model);
+                }
+                foreach (var claim in User.Claims)
+                {
+                    Console.WriteLine($"{claim.Type}: {claim.Value}");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
+
+          
             return View(model);
         }
 
@@ -289,5 +303,9 @@ namespace st10157545_giftgiversPOEs.Controllers
             return storedHash.Equals(hashOfEnteredPassword, StringComparison.OrdinalIgnoreCase);
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }
